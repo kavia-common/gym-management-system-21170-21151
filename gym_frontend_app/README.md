@@ -11,6 +11,13 @@ This app supports loading configuration values at runtime (without rebuild) via 
 - At startup, `src/config/runtimeConfig.js` loads `/app-config.json` and sets `window.__APP_CONFIG__`.
 - The API base URL (`API_BASE_URL`) and Google Client ID (`GOOGLE_CLIENT_ID`) are consumed from this runtime config if set.
 - If not defined, a fallback to the corresponding `.env` variables (`REACT_APP_API_BASE_URL`, `REACT_APP_GOOGLE_CLIENT_ID`) is used.
+- Supabase config can also be provided here:
+  ```json
+  {
+    "SUPABASE_URL": "https://xxxx.supabase.co",
+    "SUPABASE_KEY": "public-anon-key"
+  }
+  ```
 
 **To change API endpoint or Google login for a preview/deployment without rebuilding:**
 
@@ -18,7 +25,9 @@ This app supports loading configuration values at runtime (without rebuild) via 
    ```json
    {
      "API_BASE_URL": "https://your-api-url/api/v1",
-     "GOOGLE_CLIENT_ID": "your-google-client-id"
+     "GOOGLE_CLIENT_ID": "your-google-client-id",
+     "SUPABASE_URL": "https://xxxx.supabase.co",
+     "SUPABASE_KEY": "public-anon-key"
    }
    ```
 2. Reload the app in the browser.
@@ -31,14 +40,16 @@ This app supports loading configuration values at runtime (without rebuild) via 
 
 - Ocean Professional theme (classic, responsive dashboard)
 - Routing with react-router-dom
-- Authentication (login, signup, logout, Google Sign-In)
+- Authentication:
+  - Existing backend JWT flows (legacy) remain in code, but
+  - New Supabase email/password auth via `@supabase/supabase-js`
 - Protected dashboard pages
 - API client with axios:
   - Base URL from `REACT_APP_API_BASE_URL` (default `http://localhost:3001/api/v1`)
-  - JWT Authorization header from stored tokens
-  - 401 handling redirects to `/login`
+  - Authorization header injection available via `src/api/client.ts` (`fetchWithAuth`)
+  - 401 handling redirects to sign-in
 - Pages
-  - /login, /signup
+  - /signin, /signup
   - /dashboard (overview)
   - /dashboard/memberships
   - /dashboard/classes
@@ -69,35 +80,11 @@ See `.env.example` for all variables:
 - `REACT_APP_APP_ENV` (dev|staging|prod label shown in navbar)
 - `REACT_APP_TEST_MODE` (true/false for mock/test flows)
 - `REACT_APP_GOOGLE_CLIENT_ID` (enable Google Sign-In button and One Tap)
-
-## Google Sign-In (GIS) Setup
-
-This app uses Google Identity Services (GIS) for "Continue with Google" and One Tap login.
-
-1. Create OAuth Client ID:
-   - Go to Google Cloud Console → APIs & Services → Credentials.
-   - Create Credentials → OAuth client ID → Application type: Web application.
-   - Add Authorized JavaScript origins:
-     - http://localhost:3000 (for local dev)
-     - Your deployed frontend URL(s)
-   - Copy the Client ID.
-
-2. Configure frontend:
-   - Set `REACT_APP_GOOGLE_CLIENT_ID` in `.env` to your client ID.
-   - Restart the dev server if already running.
-
-3. Backend endpoint:
-   - The frontend will POST the credential (Google ID token) to:
-     - `POST /api/v1/auth/google/one-tap` with body `{ "credential": "<ID_TOKEN>" }`
-   - The backend should verify the ID token, create/find the user, and return app JWTs:
-     - Response shape should match `TokenPair` (access_token, refresh_token, token_type).
-
-4. Behavior:
-   - On the Login page, the Google button will render if `REACT_APP_GOOGLE_CLIENT_ID` is set.
-   - On credential success, the app stores the tokens and redirects to `/dashboard`.
+- `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_KEY` to enable Supabase auth
+- `REACT_APP_SITE_URL` used for Supabase email redirect on signup
 
 ## Notes
 
-- Tokens are stored in memory and `localStorage` (key: `gym.tokens`).
-- On 401 responses, tokens are cleared and the app redirects to `/login`.
+- Supabase session is stored by `@supabase/supabase-js` and exposed via `AuthContext`.
+- On sign out, ProtectedRoute redirects to `/signin`.
 - CRUD actions are basic and aligned with the backend OpenAPI spec provided.

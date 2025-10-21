@@ -1,24 +1,15 @@
 import React from 'react';
-import { useAuth } from '../state/authContext';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useSupabaseAuth } from '../context/AuthContext';
+import UserMenu from './UserMenu.tsx';
 
 /**
  * PUBLIC_INTERFACE
  * Navbar: Top navigation bar with brand, environment pill, and auth actions.
  */
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { user } = useSupabaseAuth();
   const env = process.env.REACT_APP_APP_ENV || 'dev';
-
-  const handleLogout = () => {
-    logout();
-    // If user logs out while on a protected route, redirect to login
-    if (location.pathname.startsWith('/dashboard')) {
-      navigate('/login');
-    }
-  };
 
   return (
     <header className="navbar">
@@ -31,13 +22,10 @@ export default function Navbar() {
       </div>
       <div className="actions">
         {user ? (
-          <>
-            <span className="helper">Signed in as {user.email}</span>
-            <button className="btn ghost" onClick={handleLogout}>Logout</button>
-          </>
+          <UserMenu />
         ) : (
           <>
-            <Link className="btn ghost" to="/login">Login</Link>
+            <Link className="btn ghost" to="/signin">Sign In</Link>
             <Link className="btn" to="/signup">Sign Up</Link>
           </>
         )}

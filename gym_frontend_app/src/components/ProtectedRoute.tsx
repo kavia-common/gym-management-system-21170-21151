@@ -4,13 +4,19 @@ import { useSupabaseAuth } from '../context/AuthContext';
 
 /**
  * PUBLIC_INTERFACE
- * ProtectedRoute (legacy shim): Wraps protected routes for JS-only consumers.
+ * ProtectedRoute: Guards children routes and redirects to /signin when not authenticated.
  */
 export default function ProtectedRoute() {
   const { isAuthenticated, loading } = useSupabaseAuth();
   const location = useLocation();
 
-  if (loading) return <div className="card">Loading...</div>;
+  if (loading) {
+    return (
+      <div style={{ display: 'grid', placeItems: 'center', height: '60vh' }}>
+        <div className="card">Loading...</div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace state={{ from: location }} />;

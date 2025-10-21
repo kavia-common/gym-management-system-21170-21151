@@ -3,16 +3,18 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Auth/Login';
-import Signup from './pages/Auth/Signup';
 import Overview from './pages/Dashboard/Overview';
 import Memberships from './pages/Dashboard/Memberships';
 import Classes from './pages/Dashboard/Classes';
 import Trainers from './pages/Dashboard/Trainers';
 import Bookings from './pages/Dashboard/Bookings';
 import CheckoutResult from './pages/Payments/CheckoutResult';
-import { AuthProvider } from './state/authContext';
+
+// Supabase auth
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import SignIn from './pages/SignIn.tsx';
+import SignUp from './pages/SignUp.tsx';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -29,8 +31,9 @@ function App() {
           <main className="content">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Overview />} />
