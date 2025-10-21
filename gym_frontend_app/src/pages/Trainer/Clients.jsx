@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
-import { addTrainerClient, listTrainerClients, removeTrainerClient } from '../../api/hooks/useTrainerApi.ts';
+import { addTrainerClient, listTrainerClients, removeTrainerClient } from '../../api/hooks/useTrainerApi.js';
 
 /**
  * PUBLIC_INTERFACE
@@ -15,14 +15,21 @@ export default function Clients() {
   const [email, setEmail] = useState('');
   const [userId, setUserId] = useState('');
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
+  const [error, setError] = useState('');
 
   const load = async () => {
+    setLoading(true);
+    setError('');
     try {
       const c = await listTrainerClients();
       setClients(Array.isArray(c) ? c : []);
-    } catch {
+    } catch (e) {
       setClients([]);
+      setError('Failed to load clients.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,11 +40,11 @@ export default function Clients() {
       setMsg('Please provide email or user id');
       return;
     }
-    setBusy(true); setMsg('');
+    setBusy(true); setMsg(''); setError('');
     const payload = email ? { email } : { user_id: userId };
     const res = await addTrainerClient(payload);
     if (!res.ok) {
-      setMsg(res.message || 'Add failed');
+      setError(res.message || 'Add failed');
     } else {
       setMsg('Client added');
       setEmail(''); setUserId('');
@@ -47,10 +54,10 @@ export default function Clients() {
   };
 
   const onRemove = async (id) => {
-    setBusy(true); setMsg('');
+    setBusy(true); setMsg(''); setError('');
     const res = await removeTrainerClient(id);
     if (!res.ok) {
-      setMsg(res.message || 'Remove failed');
+      setError(res.message || 'Remove failed');
     } else {
       setMsg('Client removed');
       await load();
@@ -83,11 +90,18 @@ export default function Clients() {
               {msg}
             </div>
           )}
+          {error && (
+            <div className="error-text" style={{ marginTop: 8 }}>
+              {error}
+            </div>
+          )}
         </div>
       </Card>
 
-      <Card title="My Clients" actions={<button className="btn ghost" onClick={load} disabled={busy}>Refresh</button>}>
-        {clients.length === 0 ? (
+      <Card title="My Clients" actions={<button className="btn ghost" onClick={load} disabled={busy || loading}>{loading ? 'Loading...' : 'Refresh'}</button>}>
+        {loading ? (
+          <div>Loading...</div>
+        ) : clients.length === 0 ? (
           <div className="helper">No clients assigned.</div>
         ) : (
           <table className="table" style={{ tableLayout: 'fixed' }}>
@@ -107,6 +121,11 @@ export default function Clients() {
               ))}
             </tbody>
           </table>
+        )}
+        {error && !loading && (
+          <div className="error-text" style={{ marginTop: 8 }}>
+            {error}
+          </div>
         )}
       </Card>
     </div>

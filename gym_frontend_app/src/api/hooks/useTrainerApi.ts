@@ -1,6 +1,6 @@
 import api from '../../services/apiClient';
-// Use explicit .ts extension to match file location in this mixed JS/TS setup
-import { fetchWithAuth } from '../client.ts';
+// Import without extension to let CRA/TS resolver handle the TS module correctly
+import { fetchWithAuth } from '../client.js';
 
 /**
  * PUBLIC_INTERFACE

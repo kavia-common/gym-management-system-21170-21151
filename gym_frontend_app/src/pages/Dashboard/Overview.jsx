@@ -42,7 +42,7 @@ export default function Overview() {
       </Card>
       <Card title="Upcoming Sessions">
         {loading ? 'Loading...' : (
-          sessions.length ? (
+          sessions && sessions.length ? (
             <table className="table">
               <thead>
                 <tr><th>ID</th><th>Class</th><th>Start</th><th>End</th><th>Spots</th></tr>
