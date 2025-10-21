@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '../lib/supabaseClient';
+// Import TS module from JS by path; CRA with our shims allows this
 import { fetchWithAuth } from '../api/client.ts';
 import api from '../services/apiClient';
 
@@ -59,16 +60,18 @@ export function AuthProvider({ children }) {
 
   // Fetch /api/me using Supabase access token
   const loadMe = async () => {
+    // Load the role/profile derived from backend; ensure consistent state
     try {
-      // If no session, clear profile and role
       if (!session?.access_token) {
+        // No session -> ensure cleared and do not fetch
         setProfile(null);
         setRole(null);
         return;
       }
       const resp = await fetchWithAuth(getMeUrl());
       if (!resp.ok) {
-        const _ = await resp.text();
+        // If backend not ready or unauthorized, keep unauth state without throwing
+        try { await resp.text(); } catch {}
         setProfile(null);
         setRole(null);
         return;
@@ -116,6 +119,8 @@ export function AuthProvider({ children }) {
       setLoading(true);
       await loadMe();
       setLoading(false);
+      // keep ready true after first init
+      setReady(true);
     });
 
     return () => {
