@@ -1,82 +1,48 @@
-# Lightweight React Template for KAVIA
+# Gym Frontend App
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+React frontend for the Gym Management System. Implements routing, authentication, dashboard sections, and API integration with the backend.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- Ocean Professional theme (classic, responsive dashboard)
+- Routing with react-router-dom
+- Authentication (login, signup, logout)
+- Protected dashboard pages
+- API client with axios:
+  - Base URL from `REACT_APP_API_BASE_URL` (default `http://localhost:3001/api/v1`)
+  - JWT Authorization header from stored tokens
+  - 401 handling redirects to `/login`
+- Pages
+  - /login, /signup
+  - /dashboard (overview)
+  - /dashboard/memberships
+  - /dashboard/classes
+  - /dashboard/trainers
+  - /dashboard/bookings
+  - /checkout/result
 
 ## Getting Started
 
-In the project directory, you can run:
+1. Copy `.env.example` to `.env` and adjust values as needed.
+2. Install dependencies:
+   - `npm install`
+3. Start the app:
+   - `npm start`
+   - The app runs on `http://localhost:3000` (port can be overridden via PORT env).
 
-### `npm start`
+Ensure the backend is running and accessible at the URL configured in `REACT_APP_API_BASE_URL`.
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Environment Variables
 
-### `npm test`
+See `.env.example` for all variables:
+- `PORT` (default 3000)
+- `REACT_APP_API_BASE_URL` (e.g., `http://localhost:3001/api/v1`)
+- `REACT_APP_STRIPE_PUBLISHABLE_KEY` (optional)
+- `REACT_APP_APP_ENV` (dev|staging|prod label shown in navbar)
+- `REACT_APP_TEST_MODE` (true/false for mock/test flows)
 
-Launches the test runner in interactive watch mode.
+## Notes
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Tokens are stored in memory and `localStorage` (key: `gym.tokens`).
+- On 401 responses, tokens are cleared and the app redirects to `/login`.
+- CRUD actions are basic and aligned with the backend OpenAPI spec provided.
