@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabaseClient';
+import { getSupabaseClient } from '../../lib/supabaseClient';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const handle = async () => {
+      const supabase = getSupabaseClient();
       const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
       if (error) {
+        // eslint-disable-next-line no-console
         console.error('Auth callback error:', error);
         navigate('/auth/error', { replace: true });
         return;
