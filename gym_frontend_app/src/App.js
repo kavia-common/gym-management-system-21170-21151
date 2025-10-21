@@ -12,7 +12,7 @@ import CheckoutResult from './pages/Payments/CheckoutResult';
 import AuthCallback from './pages/Auth/Callback.jsx';
 
 // Supabase auth
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';

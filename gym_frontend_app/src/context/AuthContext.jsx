@@ -7,7 +7,22 @@ import api from '../services/apiClient';
  * PUBLIC_INTERFACE
  * useSupabaseAuth: Hook to access Supabase auth context.
  */
-const AuthContext = createContext(null);
+/**
+ * AuthContext value shape
+ * @typedef {Object} AuthContextValue
+ * @property {any|null} user
+ * @property {any|null} session
+ * @property {any|null} profile
+ * @property {'member'|'trainer'|'admin'|null} role
+ * @property {boolean} loading
+ * @property {boolean} ready
+ * @property {boolean} isAuthenticated
+ * @property {(email:string, password:string)=>Promise<any>} signIn
+ * @property {(email:string, password:string)=>Promise<any>} signUp
+ * @property {()=>Promise<void>} signOut
+ * @property {()=>Promise<string|null>} getAccessToken
+ */
+const AuthContext = createContext(/** @type {AuthContextValue|null} */(null));
 
 /**
  * Helper to build /api/me URL respecting whether API_BASE_URL ends with /api/v1 or is a plain host.
