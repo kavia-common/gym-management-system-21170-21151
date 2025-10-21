@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { signInWithGoogle } from '../utils/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 
@@ -50,6 +51,19 @@ export default function SignIn() {
             {submitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ marginTop: 12, marginBottom: 8, textAlign: 'center' }}>
+          <span>or</span>
+        </div>
+        <button
+          className="btn"
+          onClick={() => signInWithGoogle()}
+          type="button"
+          aria-label="Sign in with Google"
+        >
+          Continue with Google
+        </button>
+
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
         </p>

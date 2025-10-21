@@ -9,6 +9,7 @@ import Classes from './pages/Dashboard/Classes';
 import Trainers from './pages/Dashboard/Trainers';
 import Bookings from './pages/Dashboard/Bookings';
 import CheckoutResult from './pages/Payments/CheckoutResult';
+import AuthCallback from './pages/Auth/Callback.jsx';
 
 // Supabase auth
 import { AuthProvider } from './context/AuthContext';
@@ -35,6 +36,7 @@ function App() {
 
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Overview />} />

@@ -82,6 +82,7 @@ See `.env.example` for all variables:
 - `REACT_APP_GOOGLE_CLIENT_ID` (enable Google Sign-In button and One Tap)
 - `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_KEY` to enable Supabase auth
 - `REACT_APP_SITE_URL` used for Supabase email redirect on signup
+- `REACT_APP_GOOGLE_CLIENT_ID` (optional): when present, the Sign In screen shows a "Continue with Google" button using Supabase OAuth. Ensure Supabase Auth > Providers has Google enabled and URLs are allowlisted.
 
 ## Notes
 
