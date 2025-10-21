@@ -14,12 +14,16 @@ export default function NotAuthorized() {
         <div className="card-header">
           <div className="card-title">Not authorized</div>
         </div>
-        <p className="helper">
-          You do not have permission to access this page.
+        <p className="helper" style={{ marginTop: 0 }}>
+          You are signed in but your role does not have permission to view this page.
         </p>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <p className="helper">
+          If you believe this is a mistake, contact support or an administrator to update your role.
+        </p>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <Link className="btn" to={from}>Go Back</Link>
           <Link className="btn ghost" to="/dashboard">Go to Dashboard</Link>
+          <Link className="btn ghost" to="/account">View Account</Link>
         </div>
       </section>
     </div>

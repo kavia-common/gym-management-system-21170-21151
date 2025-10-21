@@ -27,7 +27,12 @@ function TrainerDashboardPlaceholder() {
   return <div className="card"><h3>Trainer Dashboard</h3><div className="helper">Trainer-only content will appear here.</div></div>;
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * App: Main application entry for routes and layout.
+ * - Uses JS ProtectedRoute shim to guard authenticated routes
+ * - Demonstrates role-gated routes for member and trainer dashboards
+ */
 function App() {
   /**
    * Entry point for the application. Sets up Router, layout (Navbar, Sidebar),

@@ -134,6 +134,8 @@ export function AuthProvider({ children }) {
     };
   }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Role is derived from backend /api/me (Supabase-authenticated) response.
+  // accepted roles: 'member' | 'trainer' | 'admin'
   const value = useMemo(
     () => ({
       user,
