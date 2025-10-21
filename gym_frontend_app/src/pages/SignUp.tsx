@@ -8,7 +8,7 @@ import { useSupabaseAuth } from '../context/AuthContext';
  * Notes: Depending on Supabase settings, user may need to confirm email.
  */
 export default function SignUp() {
-  const { signUp } = useSupabaseAuth();
+  const { signUp, role } = useSupabaseAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +25,8 @@ export default function SignUp() {
       const { user, session } = await signUp(email, password);
       if (session) {
         // Signed in immediately (if email confirmation disabled)
-        navigate('/dashboard', { replace: true });
+        const dest = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
+        navigate(dest, { replace: true });
       } else {
         setInfo('Check your email to confirm your account, then sign in.');
       }

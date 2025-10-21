@@ -8,14 +8,14 @@ import { useSupabaseAuth } from '../context/AuthContext';
  * SignIn: Email/password login via Supabase.
  */
 export default function SignIn() {
-  const { signIn } = useSupabaseAuth();
+  const { signIn, role } = useSupabaseAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  const from = (location.state as any)?.from?.pathname || null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +23,8 @@ export default function SignIn() {
     setError('');
     try {
       await signIn(email, password);
-      navigate(from, { replace: true });
+      const fallback = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
+      navigate(from || fallback, { replace: true });
     } catch (err: any) {
       setError(err?.message || 'Sign in failed');
     } finally {

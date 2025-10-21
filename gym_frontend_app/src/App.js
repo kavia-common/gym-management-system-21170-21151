@@ -19,6 +19,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
 import NotAuthorized from './pages/NotAuthorized.jsx';
+import { useSupabaseAuth } from './context/AuthContext';
 
 // Member pages
 import MemberDashboard from './pages/Member/MemberDashboard.jsx';
@@ -36,6 +37,28 @@ import ProgramBuilder from './pages/Trainer/Workouts/ProgramBuilder.jsx';
  * - Uses JS ProtectedRoute shim to guard authenticated routes
  * - Demonstrates role-gated routes for member and trainer dashboards
  */
+function RootRedirect() {
+  const { ready, isAuthenticated, role } = useSupabaseAuth();
+  if (!ready) {
+    return <div className="card">Loading...</div>;
+  }
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" replace />;
+  }
+  if (role === 'trainer') {
+    return <Navigate to="/dashboard/trainer" replace />;
+  }
+  // default to member
+  return <Navigate to="/dashboard/member" replace />;
+}
+
+function RoleDashboard() {
+  const { role, ready } = useSupabaseAuth();
+  if (!ready) return <div className="card">Loading...</div>;
+  if (role === 'trainer') return <Navigate to="/dashboard/trainer" replace />;
+  return <Navigate to="/dashboard/member" replace />;
+}
+
 function App() {
   /**
    * Entry point for the application. Sets up Router, layout (Navbar, Sidebar),
@@ -49,7 +72,13 @@ function App() {
           <Sidebar />
           <main className="content">
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Root route: if authenticated, send to role-specific dashboard. Otherwise to /signin */}
+              <Route
+                path="/"
+                element={
+                  <RootRedirect />
+                }
+              />
 
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
@@ -58,7 +87,7 @@ function App() {
 
               {/* Authenticated routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/dashboard" element={<Overview />} />
+                <Route path="/dashboard" element={<RoleDashboard />} />
                 <Route path="/dashboard/memberships" element={<Memberships />} />
                 <Route path="/dashboard/classes" element={<Classes />} />
                 <Route path="/dashboard/trainers" element={<Trainers />} />

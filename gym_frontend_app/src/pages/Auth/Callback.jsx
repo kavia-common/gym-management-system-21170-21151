@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSupabaseClient } from '../../lib/supabaseClient';
+import { useSupabaseAuth } from '../../context/AuthContext';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
+  const { role } = useSupabaseAuth();
 
   useEffect(() => {
     const handle = async () => {
@@ -16,13 +18,14 @@ export default function AuthCallback() {
         return;
       }
       if (data?.session) {
-        navigate('/dashboard', { replace: true });
+        const dest = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
+        navigate(dest, { replace: true });
       } else {
         navigate('/signin', { replace: true });
       }
     };
     handle();
-  }, [navigate]);
+  }, [navigate, role]);
 
   return <div className="card"><h3>Processing authentication...</h3></div>;
 }

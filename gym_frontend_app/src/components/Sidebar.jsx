@@ -1,11 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useSupabaseAuth } from '../context/AuthContext';
 
 /**
  * PUBLIC_INTERFACE
  * Sidebar: Left navigation menu for dashboard sections.
+ * Renders only for authenticated users to avoid showing app nav when logged out.
  */
 export default function Sidebar() {
+  const { isAuthenticated, ready } = useSupabaseAuth();
+  if (!ready || !isAuthenticated) {
+    return null;
+  }
   return (
     <aside className="sidebar">
       <ul className="menu">
