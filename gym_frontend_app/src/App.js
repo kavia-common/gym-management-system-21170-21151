@@ -15,6 +15,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
+import Account from './pages/Account.tsx';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/dashboard/trainers" element={<Trainers />} />
                 <Route path="/dashboard/bookings" element={<Bookings />} />
                 <Route path="/checkout/result" element={<CheckoutResult />} />
+                <Route path="/account" element={<Account />} />
               </Route>
 
               <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />

@@ -60,6 +60,9 @@ export default function SignUp() {
         <p className="helper" style={{ marginTop: 16 }}>
           Already have an account? <Link to="/signin" style={{ color: 'var(--primary)' }}>Sign in</Link>
         </p>
+        <div style={{ marginTop: 8 }}>
+          <Link className="btn ghost" to="/account">Go to Account</Link>
+        </div>
       </section>
     </div>
   );

@@ -22,7 +22,10 @@ export default function Navbar() {
       </div>
       <div className="actions">
         {user ? (
-          <UserMenu />
+          <>
+            <Link className="btn ghost" to="/account">Account</Link>
+            <UserMenu />
+          </>
         ) : (
           <>
             <Link className="btn ghost" to="/signin">Sign In</Link>

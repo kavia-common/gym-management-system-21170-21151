@@ -53,6 +53,9 @@ export default function SignIn() {
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
         </p>
+        <div style={{ marginTop: 8 }}>
+          <Link className="btn ghost" to="/account">Go to Account</Link>
+        </div>
       </section>
     </div>
   );
