@@ -34,20 +34,20 @@ export default function TrainerDashboard() {
       <Card title="My Clients" actions={<a className="btn ghost" href="/dashboard/trainer/clients">Manage Clients</a>}>
         {loading ? 'Loading...' : (
           clients.length ? (
-            <table className="table">
+            <table className="table" style={{ tableLayout: 'fixed' }}>
               <thead>
-                <tr><th>Name/Email</th><th>User ID</th></tr>
+                <tr><th style={{ width: '50%' }}>Name/Email</th><th style={{ width: '50%' }}>User ID</th></tr>
               </thead>
               <tbody>
                 {clients.slice(0, 6).map((c) => (
                   <tr key={c.user_id || c.id}>
-                    <td>{c.name || c.email || '—'}</td>
-                    <td style={{ fontFamily: 'monospace' }}>{c.user_id || c.id}</td>
+                    <td style={{ wordBreak: 'break-word' }}>{c.name || c.email || '—'}</td>
+                    <td style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{c.user_id || c.id}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          ) : <div className="helper">No clients assigned yet.</div>
+          ) : <div className="helper" style={{ background: 'rgba(30,58,138,0.05)', padding: 8, borderRadius: 8 }}>No clients assigned yet.</div>
         )}
       </Card>
 
@@ -68,7 +68,7 @@ export default function TrainerDashboard() {
                 ))}
               </tbody>
             </table>
-          ) : <div className="helper">No recent logs.</div>
+          ) : <div className="helper" style={{ background: 'rgba(30,58,138,0.05)', padding: 8, borderRadius: 8 }}>No recent logs.</div>
         )}
       </Card>
 

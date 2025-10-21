@@ -1,4 +1,5 @@
 import api from '../../services/apiClient';
+// Use explicit .ts extension to match file location in this mixed JS/TS setup
 import { fetchWithAuth } from '../client.ts';
 
 /**

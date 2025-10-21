@@ -72,11 +72,17 @@ export default function Clients() {
               <input placeholder="uuid-or-internal-id" value={userId} onChange={(e)=>setUserId(e.target.value)} />
             </div>
           </div>
-          <div className="helper">Provide either email or user id. Email takes precedence when both are provided.</div>
+          <div className="helper" style={{ background: 'rgba(30,58,138,0.05)', padding: 8, borderRadius: 8 }}>
+            Provide either email or user id. Email takes precedence when both are provided.
+          </div>
           <div>
             <button className="btn" disabled={busy} onClick={onAdd}>{busy ? 'Working...' : 'Add Client'}</button>
           </div>
-          {msg && <div className="helper" style={{ marginTop: 8 }}>{msg}</div>}
+          {msg && (
+            <div className="helper" style={{ marginTop: 8, color: msg.toLowerCase().includes('fail') ? 'var(--error)' : 'var(--success)' }}>
+              {msg}
+            </div>
+          )}
         </div>
       </Card>
 
@@ -84,15 +90,15 @@ export default function Clients() {
         {clients.length === 0 ? (
           <div className="helper">No clients assigned.</div>
         ) : (
-          <table className="table">
+          <table className="table" style={{ tableLayout: 'fixed' }}>
             <thead>
-              <tr><th>Name/Email</th><th>User ID</th><th>Assigned Since</th><th></th></tr>
+              <tr><th style={{ width: '35%' }}>Name/Email</th><th style={{ width: '35%' }}>User ID</th><th style={{ width: '20%' }}>Assigned Since</th><th style={{ width: '10%' }}></th></tr>
             </thead>
             <tbody>
               {clients.map((c) => (
                 <tr key={c.user_id || c.id}>
-                  <td>{c.name || c.email || '—'}</td>
-                  <td style={{ fontFamily: 'monospace' }}>{c.user_id || c.id}</td>
+                  <td style={{ wordBreak: 'break-word' }}>{c.name || c.email || '—'}</td>
+                  <td style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{c.user_id || c.id}</td>
                   <td>{c.assigned_at ? new Date(c.assigned_at).toLocaleString() : '—'}</td>
                   <td>
                     <button className="btn ghost" disabled={busy} onClick={() => onRemove(c.user_id || c.id)}>Remove</button>

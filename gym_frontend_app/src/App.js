@@ -65,11 +65,13 @@ function App() {
               </Route>
 
               {/* Role-gated routes */}
+              {/* Member-only area */}
               <Route element={<ProtectedRoute allowedRoles={['member']} />}>
                 <Route path="/dashboard/member" element={<MemberDashboard />} />
                 <Route path="/dashboard/member/schedule" element={<Schedule />} />
                 <Route path="/dashboard/member/progress" element={<Progress />} />
               </Route>
+              {/* Trainer-only area: all routes below require role 'trainer' */}
               <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
                 <Route path="/dashboard/trainer" element={<TrainerDashboard />} />
                 <Route path="/dashboard/trainer/clients" element={<TrainerClients />} />

@@ -59,8 +59,8 @@ instance.interceptors.response.use(
       try {
         localStorage.removeItem('gym.tokens');
       } catch {}
-      if (window.location.pathname !== '/login') {
-        window.location.replace('/login');
+      if (window.location.pathname !== '/signin') {
+        window.location.replace('/signin');
       }
     }
     return Promise.reject(error);
