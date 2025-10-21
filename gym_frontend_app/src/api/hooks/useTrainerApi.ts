@@ -1,6 +1,6 @@
 import api from '../../services/apiClient';
-// Import without extension to let CRA/TS resolver handle the TS module correctly
-import { fetchWithAuth } from '../client.js';
+// Import TypeScript module explicitly to avoid ambiguous JS/TS interop in some environments
+import { fetchWithAuth } from '../client.ts';
 
 /**
  * PUBLIC_INTERFACE

@@ -174,7 +174,7 @@ export default function ProgramBuilder() {
           <button className="btn ghost" onClick={loadClients} disabled={loadingClients}>{loadingClients ? 'Loading...' : 'Reload Clients'}</button>
         </div>
       }>
-        {msg && <div className="helper" style={{ marginBottom: 8, color: msg.toLowerCase().includes('fail') || msg.toLowerCase().includes('error') ? 'var(--error)' : 'var(--success)' }}>{msg}</div>}
+        {msg && <div className="helper" style={{ marginBottom: 8, color: /fail|error|http/i.test(msg) ? 'var(--error)' : 'var(--success)' }}>{msg}</div>}
         <div className="form">
           <div className="grid cols-3">
             <div className="input">
