@@ -4,13 +4,16 @@ import { useSupabaseAuth } from '../context/AuthContext';
 
 /**
  * PUBLIC_INTERFACE
- * ProtectedRoute (legacy shim, JS): Supports optional allowedRoles prop for role-gated routes.
+ * ProtectedRoute (JS shim): Supports optional allowedRoles prop for role-gated routes.
+ * Redirects unauthenticated users to /signin and unauthorized roles to /not-authorized.
  */
 export default function ProtectedRoute({ allowedRoles }) {
   const { isAuthenticated, loading, ready, role } = useSupabaseAuth();
   const location = useLocation();
 
-  if (loading || !ready) return <div className="card">Loading...</div>;
+  if (loading || !ready) {
+    return <div className="card">Loading...</div>;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace state={{ from: location }} />;

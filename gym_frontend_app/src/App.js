@@ -13,7 +13,7 @@ import AuthCallback from './pages/Auth/Callback.jsx';
 
 // Supabase auth
 import { AuthProvider } from './context';
-import ProtectedRoute from './components/ProtectedRoute.tsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';

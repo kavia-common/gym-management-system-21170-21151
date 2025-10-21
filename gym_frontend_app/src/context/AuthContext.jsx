@@ -125,7 +125,12 @@ export function AuthProvider({ children }) {
 
     return () => {
       mounted = false;
-      sub.subscription?.unsubscribe?.();
+      try {
+        // @supabase/supabase-js v2 returns { data: { subscription } }
+        sub?.subscription?.unsubscribe?.();
+      } catch {
+        // ignore
+      }
     };
   }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
