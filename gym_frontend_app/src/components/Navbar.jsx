@@ -8,7 +8,7 @@ import UserMenu from './UserMenu.tsx';
  * Navbar: Top navigation bar with brand, environment pill, and auth actions.
  */
 export default function Navbar() {
-  const { user } = useSupabaseAuth();
+  const { user, role, ready } = useSupabaseAuth();
   const env = process.env.REACT_APP_APP_ENV || 'dev';
 
   return (
@@ -19,6 +19,11 @@ export default function Navbar() {
         <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(30,58,138,0.08)', color: 'var(--primary)', fontSize: 12 }}>
           {env}
         </span>
+        {ready && role && (
+          <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(5,150,105,0.08)', color: 'var(--success)', fontSize: 12 }}>
+            {role}
+          </span>
+        )}
       </div>
       <div className="actions">
         {user ? (

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '../lib/supabaseClient';
+import { fetchWithAuth } from '../api/client.ts';
+import api from '../services/apiClient';
 
 /**
  * PUBLIC_INTERFACE
@@ -8,11 +10,24 @@ import { getSupabaseClient } from '../lib/supabaseClient';
 const AuthContext = createContext(null);
 
 /**
+ * Helper to build /api/me URL respecting whether API_BASE_URL ends with /api/v1 or is a plain host.
+ */
+function getMeUrl() {
+  const base = api.getBaseUrl();
+  return `${base}/../..`.endsWith('/api/v1')
+    ? `${base.replace(/\/api\/v1$/, '')}/api/me`
+    : `${base}/api/me`;
+}
+
+/**
  * PUBLIC_INTERFACE
  * AuthProvider: wraps the app and provides:
  * - user: Supabase user object (or null)
  * - session: Supabase session (or null)
- * - loading: boolean while restoring session
+ * - loading: boolean while restoring session and fetching profile
+ * - role: 'trainer' | 'member' | 'admin' | null (null while loading or unauthenticated)
+ * - profile: object from /api/me (shape { user_id, email?, role })
+ * - ready: boolean when initial bootstrap is done (prevents UI flicker)
  * - signIn(email, password)
  * - signUp(email, password)
  * - signOut()
@@ -22,7 +37,35 @@ export function AuthProvider({ children }) {
   const supabase = getSupabaseClient();
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null); // /api/me payload
+  const [role, setRole] = useState(null); // derived from /api/me
+  const [loading, setLoading] = useState(true); // auth+profile loading
+  const [ready, setReady] = useState(false); // one-time init done
+
+  // Fetch /api/me using Supabase access token
+  const loadMe = async () => {
+    try {
+      // If no session, clear profile and role
+      if (!session?.access_token) {
+        setProfile(null);
+        setRole(null);
+        return;
+      }
+      const resp = await fetchWithAuth(getMeUrl());
+      if (!resp.ok) {
+        const _ = await resp.text();
+        setProfile(null);
+        setRole(null);
+        return;
+      }
+      const json = await resp.json();
+      setProfile(json || null);
+      setRole(json?.role || null);
+    } catch {
+      setProfile(null);
+      setRole(null);
+    }
+  };
 
   // Initialize and subscribe to auth state changes
   useEffect(() => {
@@ -32,37 +75,57 @@ export function AuthProvider({ children }) {
       try {
         const { data } = await supabase.auth.getSession();
         if (!mounted) return;
-        setSession(data.session || null);
-        setUser(data.session?.user || null);
+        const sess = data.session || null;
+        setSession(sess);
+        setUser(sess?.user || null);
+        // Load profile only if have session
+        if (sess?.access_token) {
+          await loadMe();
+        } else {
+          setProfile(null);
+          setRole(null);
+        }
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setLoading(false);
+          setReady(true);
+        }
       }
     };
 
     init();
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, sess) => {
       setSession(sess);
       setUser(sess?.user || null);
+      setLoading(true);
+      await loadMe();
+      setLoading(false);
     });
 
     return () => {
       mounted = false;
       sub.subscription?.unsubscribe?.();
     };
-  }, [supabase]);
+  }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const value = useMemo(
     () => ({
       user,
       session,
+      profile,
+      role,
       loading,
+      ready,
       isAuthenticated: !!session?.access_token,
       // PUBLIC_INTERFACE
       async signIn(email, password) {
         const { error, data } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        // session will be updated by onAuthStateChange
+        // onAuthStateChange will populate session/user; ensure role/profile refresh
+        try {
+          await loadMe();
+        } catch {}
         return data;
       },
       // PUBLIC_INTERFACE
@@ -78,12 +141,19 @@ export function AuthProvider({ children }) {
           },
         });
         if (error) throw error;
+        // If session exists immediately (confirmation disabled), fetch profile
+        if (data?.session?.access_token) {
+          try { await loadMe(); } catch {}
+        }
         return data;
       },
       // PUBLIC_INTERFACE
       async signOut() {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
+        // Clear local role/profile
+        setProfile(null);
+        setRole(null);
       },
       // PUBLIC_INTERFACE
       async getAccessToken() {
@@ -91,7 +161,7 @@ export function AuthProvider({ children }) {
         return data.session?.access_token || null;
       },
     }),
-    [user, session, loading, supabase]
+    [user, session, profile, role, loading, ready, supabase]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -102,4 +172,24 @@ export function useSupabaseAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useSupabaseAuth must be used within AuthProvider');
   return ctx;
+}
+
+// PUBLIC_INTERFACE
+export function useAuth() {
+  /**
+   * PUBLIC_INTERFACE
+   * useAuth: Alias to useSupabaseAuth for consumers expecting useAuth.
+   * Returns the full auth context with { user, session, profile, role, isAuthenticated, loading, ready, ...actions }.
+   */
+  return useSupabaseAuth();
+}
+
+// PUBLIC_INTERFACE
+export function useRole() {
+  /**
+   * PUBLIC_INTERFACE
+   * useRole: Returns current role ('trainer'|'member'|'admin') or null while loading/unauthenticated.
+   */
+  const { role } = useSupabaseAuth();
+  return role || null;
 }

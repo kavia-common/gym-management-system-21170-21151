@@ -7,10 +7,10 @@ import { useSupabaseAuth } from '../context/AuthContext';
  * ProtectedRoute: Guards children routes and redirects to /signin when not authenticated.
  */
 export default function ProtectedRoute() {
-  const { isAuthenticated, loading } = useSupabaseAuth();
+  const { isAuthenticated, loading, ready } = useSupabaseAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (loading || !ready) {
     return (
       <div style={{ display: 'grid', placeItems: 'center', height: '60vh' }}>
         <div className="card">Loading...</div>

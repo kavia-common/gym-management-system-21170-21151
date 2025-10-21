@@ -6,7 +6,7 @@ import { useSupabaseAuth } from '../context/AuthContext';
  * UserMenu: Minimal user menu showing email and a Sign out button.
  */
 export default function UserMenu() {
-  const { user, signOut } = useSupabaseAuth();
+  const { user, profile, signOut } = useSupabaseAuth();
 
   const handleSignOut = async () => {
     try {
@@ -23,9 +23,11 @@ export default function UserMenu() {
 
   if (!user) return null;
 
+  const email = profile?.email || user.email;
+
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-      <span className="helper">Signed in as {user.email}</span>
+      <span className="helper">Signed in as {email}</span>
       <button className="btn ghost" onClick={handleSignOut}>Sign out</button>
     </div>
   );
