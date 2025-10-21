@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../state/authContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/Card';
+import api from '../../services/apiClient';
+import { loadGisScript, initGis, renderGoogleButton, promptOneTap } from '../../services/gis';
 
 /**
  * PUBLIC_INTERFACE
  * Login page: authenticates user, stores tokens, and redirects.
+ * Also supports Google Sign-In via Google Identity Services (button + One Tap).
  */
 export default function Login() {
   const { login } = useAuth();
@@ -16,6 +19,83 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
+
+  // Google button container ref
+  const googleBtnRef = useRef(null);
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+  // Callback invoked by GIS when credential is received
+  const handleGoogleCredential = async (response) => {
+    const credential = response?.credential;
+    if (!credential) return;
+
+    setSubmitting(true);
+    setError('');
+    try {
+      // Send ID token to backend to exchange for app JWTs
+      const tokens = await api.post('/auth/google/one-tap', { credential });
+      // Store tokens via auth context by reusing the login flow:
+      // authContext expects setTokens via login/signup routes; we can set directly by hitting refresh endpoint pattern,
+      // but simplest is to emulate by storing via a small helper endpoint response (already in tokens).
+      // We don't have a direct setter exposed, but login flow returns tokens and sets into context.
+      // Instead of calling login (which needs email/password), we'll use a custom event route:
+      // Since AuthProvider updates api tokens from storage, we can set localStorage and trigger a reload path.
+      // However, to stay within current public interfaces, we can call a light helper pattern:
+      // We'll patch tokens into api client then navigate. The profile fetch will happen automatically due to AuthProvider effect.
+      try {
+        // Persist tokens for AuthProvider effect to pick up
+        localStorage.setItem('gym.tokens', JSON.stringify(tokens));
+      } catch { /* ignore storage errors */ }
+      // As api client attaches tokens from context, we also set them temporarily so current session requests are authed
+      api.setAuthTokens(tokens);
+      // Navigate to destination; AuthProvider effect (on mount) will read tokens and fetch /auth/me
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err?.response?.data?.detail || 'Google sign-in failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    const setupGis = async () => {
+      if (!GOOGLE_CLIENT_ID) {
+        // If not configured, do nothing; button won't show
+        return;
+      }
+      try {
+        await loadGisScript();
+        if (!mounted) return;
+
+        const ok = initGis(GOOGLE_CLIENT_ID, handleGoogleCredential);
+        if (!ok) return;
+
+        // Render the "Continue with Google" button
+        if (googleBtnRef.current) {
+          renderGoogleButton(googleBtnRef.current, {
+            theme: 'outline',
+            size: 'large',
+            text: 'continue_with',
+            shape: 'pill',
+            width: 360
+          });
+        }
+
+        // Optionally show One Tap (non-blocking; respects Google heuristics)
+        promptOneTap();
+      } catch {
+        // swallow errors; user can use email/password fallback
+      }
+    };
+
+    setupGis();
+
+    return () => {
+      mounted = false;
+    };
+  }, [GOOGLE_CLIENT_ID]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +129,23 @@ export default function Login() {
             {submitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        {/* Divider */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 12, margin: '16px 0' }}>
+          <div style={{ height: 1, background: 'var(--border)' }} />
+          <div className="helper">or</div>
+          <div style={{ height: 1, background: 'var(--border)' }} />
+        </div>
+
+        {/* Google Sign-In button container */}
+        {process.env.REACT_APP_GOOGLE_CLIENT_ID ? (
+          <div ref={googleBtnRef} style={{ display: 'flex', justifyContent: 'center' }} />
+        ) : (
+          <div className="helper" style={{ textAlign: 'center' }}>
+            Google Sign-In not configured. Set REACT_APP_GOOGLE_CLIENT_ID in .env to enable.
+          </div>
+        )}
+
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
         </p>
