@@ -19,10 +19,12 @@ import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
 import NotAuthorized from './pages/NotAuthorized.jsx';
 
+// Member pages
+import MemberDashboard from './pages/Member/MemberDashboard.jsx';
+import Schedule from './pages/Member/Schedule.jsx';
+import Progress from './pages/Member/Progress.jsx';
+
 // Simple placeholders for upcoming dashboards
-function MemberDashboardPlaceholder() {
-  return <div className="card"><h3>Member Dashboard</h3><div className="helper">Member-only content will appear here.</div></div>;
-}
 function TrainerDashboardPlaceholder() {
   return <div className="card"><h3>Trainer Dashboard</h3><div className="helper">Trainer-only content will appear here.</div></div>;
 }
@@ -64,9 +66,11 @@ function App() {
                 <Route path="/account" element={<Account />} />
               </Route>
 
-              {/* Role-gated demo routes */}
+              {/* Role-gated routes */}
               <Route element={<ProtectedRoute allowedRoles={['member']} />}>
-                <Route path="/dashboard/member" element={<MemberDashboardPlaceholder />} />
+                <Route path="/dashboard/member" element={<MemberDashboard />} />
+                <Route path="/dashboard/member/schedule" element={<Schedule />} />
+                <Route path="/dashboard/member/progress" element={<Progress />} />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
                 <Route path="/dashboard/trainer" element={<TrainerDashboardPlaceholder />} />

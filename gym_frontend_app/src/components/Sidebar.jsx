@@ -24,6 +24,18 @@ export default function Sidebar() {
         <li>
           <NavLink to="/dashboard/bookings" className={({ isActive }) => isActive ? 'active' : ''}>Bookings</NavLink>
         </li>
+        <li style={{ marginTop: 12 }}>
+          <span className="helper" style={{ padding: '2px 8px', display: 'inline-block' }}>Member</span>
+        </li>
+        <li>
+          <NavLink to="/dashboard/member" className={({ isActive }) => isActive ? 'active' : ''}>Member Home</NavLink>
+        </li>
+        <li>
+          <NavLink to="/dashboard/member/schedule" className={({ isActive }) => isActive ? 'active' : ''}>Schedule</NavLink>
+        </li>
+        <li>
+          <NavLink to="/dashboard/member/progress" className={({ isActive }) => isActive ? 'active' : ''}>Progress</NavLink>
+        </li>
       </ul>
     </aside>
   );
