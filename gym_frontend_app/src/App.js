@@ -10,6 +10,7 @@ import Trainers from './pages/Dashboard/Trainers';
 import Bookings from './pages/Dashboard/Bookings';
 import CheckoutResult from './pages/Payments/CheckoutResult';
 import AuthCallback from './pages/Auth/Callback.jsx';
+import Notifications from './pages/Notifications.jsx';
 
 // Supabase auth
 import { AuthProvider } from './context';
@@ -64,6 +65,11 @@ function App() {
                 <Route path="/dashboard/bookings" element={<Bookings />} />
                 <Route path="/checkout/result" element={<CheckoutResult />} />
                 <Route path="/account" element={<Account />} />
+              </Route>
+
+              {/* Notifications: members and trainers */}
+              <Route element={<ProtectedRoute allowedRoles={['member', 'trainer']} />}>
+                <Route path="/notifications" element={<Notifications />} />
               </Route>
 
               {/* Role-gated routes */}
