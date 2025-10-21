@@ -2,6 +2,31 @@
 
 React frontend for the Gym Management System. Implements routing, authentication, dashboard sections, and API integration with the backend.
 
+---
+
+## Runtime Configuration
+
+This app supports loading configuration values at runtime (without rebuild) via `public/app-config.json`.
+
+- At startup, `src/config/runtimeConfig.js` loads `/app-config.json` and sets `window.__APP_CONFIG__`.
+- The API base URL (`API_BASE_URL`) and Google Client ID (`GOOGLE_CLIENT_ID`) are consumed from this runtime config if set.
+- If not defined, a fallback to the corresponding `.env` variables (`REACT_APP_API_BASE_URL`, `REACT_APP_GOOGLE_CLIENT_ID`) is used.
+
+**To change API endpoint or Google login for a preview/deployment without rebuilding:**
+
+1. Edit `public/app-config.json` and update the relevant values:
+   ```json
+   {
+     "API_BASE_URL": "https://your-api-url/api/v1",
+     "GOOGLE_CLIENT_ID": "your-google-client-id"
+   }
+   ```
+2. Reload the app in the browser.
+
+> If `GOOGLE_CLIENT_ID` is missing, the Login screen will display a message and hide the Google sign-in button.
+
+---
+
 ## Features
 
 - Ocean Professional theme (classic, responsive dashboard)

@@ -22,7 +22,10 @@ export default function Login() {
 
   // Google button container ref
   const googleBtnRef = useRef(null);
-  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  // Prefer runtime config, else fallback to .env
+  const GOOGLE_CLIENT_ID =
+    (typeof window !== "undefined" && window.__APP_CONFIG__ && window.__APP_CONFIG__.GOOGLE_CLIENT_ID) ||
+    process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   // Callback invoked by GIS when credential is received
   const handleGoogleCredential = async (response) => {
@@ -138,11 +141,13 @@ export default function Login() {
         </div>
 
         {/* Google Sign-In button container */}
-        {process.env.REACT_APP_GOOGLE_CLIENT_ID ? (
+        {GOOGLE_CLIENT_ID ? (
           <div ref={googleBtnRef} style={{ display: 'flex', justifyContent: 'center' }} />
         ) : (
-          <div className="helper" style={{ textAlign: 'center' }}>
-            Google Sign-In not configured. Set REACT_APP_GOOGLE_CLIENT_ID in .env to enable.
+          <div className="helper" style={{ textAlign: 'center', color: "var(--error)" }}>
+            Google Sign-In is not configured.<br />
+            Please set <b>GOOGLE_CLIENT_ID</b> in <span style={{ fontFamily: "mono" }}>public/app-config.json</span><br />
+            or <b>REACT_APP_GOOGLE_CLIENT_ID</b> in your <span style={{ fontFamily: "mono" }}>.env</span> file and reload the app.
           </div>
         )}
 
