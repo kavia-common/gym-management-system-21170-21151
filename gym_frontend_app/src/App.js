@@ -24,10 +24,8 @@ import MemberDashboard from './pages/Member/MemberDashboard.jsx';
 import Schedule from './pages/Member/Schedule.jsx';
 import Progress from './pages/Member/Progress.jsx';
 
-// Simple placeholders for upcoming dashboards
-function TrainerDashboardPlaceholder() {
-  return <div className="card"><h3>Trainer Dashboard</h3><div className="helper">Trainer-only content will appear here.</div></div>;
-}
+import TrainerDashboard from './pages/Trainer/TrainerDashboard.jsx';
+import TrainerClients from './pages/Trainer/Clients.jsx';
 
 /**
  * PUBLIC_INTERFACE
@@ -73,7 +71,8 @@ function App() {
                 <Route path="/dashboard/member/progress" element={<Progress />} />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
-                <Route path="/dashboard/trainer" element={<TrainerDashboardPlaceholder />} />
+                <Route path="/dashboard/trainer" element={<TrainerDashboard />} />
+                <Route path="/dashboard/trainer/clients" element={<TrainerClients />} />
               </Route>
 
               <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />

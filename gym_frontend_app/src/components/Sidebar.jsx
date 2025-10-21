@@ -33,8 +33,14 @@ export default function Sidebar() {
         <li>
           <NavLink to="/dashboard/member/schedule" className={({ isActive }) => isActive ? 'active' : ''}>Schedule</NavLink>
         </li>
+        <li style={{ marginTop: 12 }}>
+          <span className="helper" style={{ padding: '2px 8px', display: 'inline-block' }}>Trainer</span>
+        </li>
         <li>
-          <NavLink to="/dashboard/member/progress" className={({ isActive }) => isActive ? 'active' : ''}>Progress</NavLink>
+          <NavLink to="/dashboard/trainer" className={({ isActive }) => isActive ? 'active' : ''}>Trainer Home</NavLink>
+        </li>
+        <li>
+          <NavLink to="/dashboard/trainer/clients" className={({ isActive }) => isActive ? 'active' : ''}>Clients</NavLink>
         </li>
       </ul>
     </aside>

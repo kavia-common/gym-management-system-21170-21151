@@ -1,0 +1,90 @@
+import React, { useEffect, useState } from 'react';
+import Card from '../../components/Card';
+import { listTrainerClients, listRecentClientLogs } from '../../api/hooks/useTrainerApi.ts';
+
+/**
+ * PUBLIC_INTERFACE
+ * TrainerDashboard: Home for trainers showing:
+ * - Assigned clients list (first 6)
+ * - Recent client activity logs (if available)
+ * - Quick actions to manage clients and view full list
+ */
+export default function TrainerDashboard() {
+  const [clients, setClients] = useState([]);
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const c = await listTrainerClients();
+      setClients(Array.isArray(c) ? c : []);
+    } catch { setClients([]); }
+    try {
+      const l = await listRecentClientLogs();
+      setLogs(Array.isArray(l) ? l : []);
+    } catch { setLogs([]); }
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  return (
+    <div className="grid cols-3">
+      <Card title="My Clients" actions={<a className="btn ghost" href="/dashboard/trainer/clients">Manage Clients</a>}>
+        {loading ? 'Loading...' : (
+          clients.length ? (
+            <table className="table">
+              <thead>
+                <tr><th>Name/Email</th><th>User ID</th></tr>
+              </thead>
+              <tbody>
+                {clients.slice(0, 6).map((c) => (
+                  <tr key={c.user_id || c.id}>
+                    <td>{c.name || c.email || '—'}</td>
+                    <td style={{ fontFamily: 'monospace' }}>{c.user_id || c.id}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : <div className="helper">No clients assigned yet.</div>
+        )}
+      </Card>
+
+      <Card title="Recent Activity">
+        {loading ? 'Loading...' : (
+          logs.length ? (
+            <table className="table">
+              <thead>
+                <tr><th>When</th><th>Client</th><th>Event</th></tr>
+              </thead>
+              <tbody>
+                {logs.slice(0, 8).map((l, idx) => (
+                  <tr key={l.id || idx}>
+                    <td>{l.timestamp ? new Date(l.timestamp).toLocaleString() : '—'}</td>
+                    <td>{l.client_email || l.client_name || l.client_id || '—'}</td>
+                    <td>{l.event || l.type || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : <div className="helper">No recent logs.</div>
+        )}
+      </Card>
+
+      <Card title="Quick Actions">
+        <div className="grid">
+          <div>
+            <a className="btn" href="/dashboard/trainer/clients">Add/Remove Clients</a>
+          </div>
+          <div>
+            <a className="btn ghost" href="/dashboard/trainers">Browse Trainers (public)</a>
+          </div>
+          <div>
+            <button className="btn ghost" onClick={load}>Refresh</button>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
