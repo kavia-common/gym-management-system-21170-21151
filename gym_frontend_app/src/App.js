@@ -13,13 +13,12 @@ import AuthCallback from './pages/Auth/Callback.jsx';
 import Notifications from './pages/Notifications.jsx';
 
 // Supabase auth
-import { AuthProvider } from './context';
+import { AuthProvider, useSupabaseAuth } from './context';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
 import NotAuthorized from './pages/NotAuthorized.jsx';
-import { useSupabaseAuth } from './context/AuthContext';
 
 // Member pages
 import MemberDashboard from './pages/Member/MemberDashboard.jsx';
@@ -82,6 +81,7 @@ function App() {
 
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/auth/login" element={<Navigate to="/signin" replace />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/not-authorized" element={<NotAuthorized />} />
 
