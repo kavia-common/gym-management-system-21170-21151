@@ -26,6 +26,8 @@ import Progress from './pages/Member/Progress.jsx';
 
 import TrainerDashboard from './pages/Trainer/TrainerDashboard.jsx';
 import TrainerClients from './pages/Trainer/Clients.jsx';
+import TrainerTemplates from './pages/Trainer/Workouts/Templates.jsx';
+import ProgramBuilder from './pages/Trainer/Workouts/ProgramBuilder.jsx';
 
 /**
  * PUBLIC_INTERFACE
@@ -75,6 +77,8 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
                 <Route path="/dashboard/trainer" element={<TrainerDashboard />} />
                 <Route path="/dashboard/trainer/clients" element={<TrainerClients />} />
+                <Route path="/dashboard/trainer/workouts/templates" element={<TrainerTemplates />} />
+                <Route path="/dashboard/trainer/workouts/program-builder" element={<ProgramBuilder />} />
               </Route>
 
               <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />

@@ -42,6 +42,12 @@ export default function Sidebar() {
         <li>
           <NavLink to="/dashboard/trainer/clients" className={({ isActive }) => isActive ? 'active' : ''}>Clients</NavLink>
         </li>
+        <li>
+          <NavLink to="/dashboard/trainer/workouts/templates" className={({ isActive }) => isActive ? 'active' : ''}>Workouts / Templates</NavLink>
+        </li>
+        <li>
+          <NavLink to="/dashboard/trainer/workouts/program-builder" className={({ isActive }) => isActive ? 'active' : ''}>Program Builder</NavLink>
+        </li>
       </ul>
     </aside>
   );
