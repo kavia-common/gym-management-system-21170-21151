@@ -32,6 +32,9 @@ React frontend for the Gym Management System. Implements routing, authentication
 
 Ensure the backend is running and accessible at the URL configured in `REACT_APP_API_BASE_URL`.
 
+If backend routes change, ensure the backend OpenAPI is regenerated:
+- In `gym_backend_api`: `python -m src.api.generate_openapi` (writes to `interfaces/openapi.json`)
+
 ## Environment Variables
 
 See `.env.example` for all variables:
