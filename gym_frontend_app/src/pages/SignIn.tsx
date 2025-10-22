@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { signInWithGoogle } from '../utils/auth';
+import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
+import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
+import GoogleButton from '../components/auth/GoogleButton.jsx';
 
 /**
  * PUBLIC_INTERFACE
@@ -9,61 +10,32 @@ import { useSupabaseAuth } from '../context/AuthContext';
  */
 export default function SignIn() {
   const { signIn, role } = useSupabaseAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as any)?.from?.pathname || null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    try {
-      await signIn(email, password);
-      const fallback = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
-      navigate(from || fallback, { replace: true });
-    } catch (err: any) {
-      setError(err?.message || 'Sign in failed');
-    } finally {
-      setSubmitting(false);
-    }
+  const handleEmailPassword = async (email: string, password: string) => {
+    await signIn(email, password);
+    const fallback = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
+    navigate(from || fallback || '/', { replace: true });
   };
 
   return (
     <div className="content" style={{ maxWidth: 520, margin: '40px auto' }}>
-      <section className="card">
+      <section className="card" role="region" aria-labelledby="signin-title">
         <div className="card-header">
-          <div className="card-title">Sign in</div>
+          <div className="card-title" id="signin-title">Sign in</div>
         </div>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="input">
-            <label htmlFor="email">Email</label>
-            <input id="email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required placeholder="you@example.com" />
-          </div>
-          <div className="input">
-            <label htmlFor="password">Password</label>
-            <input id="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required placeholder="••••••••" />
-          </div>
-          {error && <div className="error-text">{error}</div>}
-          <button className="btn" disabled={submitting} type="submit">
-            {submitting ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
 
-        <div style={{ marginTop: 12, marginBottom: 8, textAlign: 'center' }}>
-          <span>or</span>
+        <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 12, margin: '16px 0' }}>
+          <div style={{ height: 1, background: 'var(--border)' }} />
+          <div className="helper">or</div>
+          <div style={{ height: 1, background: 'var(--border)' }} />
         </div>
-        <button
-          className="btn"
-          onClick={() => signInWithGoogle()}
-          type="button"
-          aria-label="Sign in with Google"
-        >
-          Continue with Google
-        </button>
+
+        <GoogleButton />
 
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>

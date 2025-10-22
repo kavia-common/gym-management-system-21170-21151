@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import './styles/auth.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Overview from './pages/Dashboard/Overview';

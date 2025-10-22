@@ -52,7 +52,7 @@ export const signInWithOAuth = async (provider) => {
       error:
         e instanceof Error
           ? e
-          : new Error('Failed to initiate OAuth sign-in. Please try again later.'),
+          : new Error('Failed to initiate OAuth sign-in. If Google is not enabled in Supabase, please enable it or use email/password.'),
     };
   }
 };
