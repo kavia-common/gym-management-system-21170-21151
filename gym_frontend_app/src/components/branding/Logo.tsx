@@ -63,6 +63,8 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
             border: 0,
             boxShadow: 'none',
             outline: 'none',
+            WebkitMaskImage: 'none',
+            maskImage: 'none',
           }}
           className={mergedClass}
           loading="eager"
@@ -114,6 +116,14 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
             box-shadow: none !important;
             outline: none !important;
             margin-inline: auto;
+          }
+          /* Remove default img focus or hover outlines within anchors for this component */
+          img.auth-logo:focus,
+          img.auth-logo:focus-visible,
+          img.auth-logo:hover {
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
           }
           /* Responsive tweak for smaller screens */
           @media (max-width: 480px) {

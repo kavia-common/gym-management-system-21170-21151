@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu.tsx';
 import { fetchUnreadCount } from '../api/hooks/useNotifications.ts';
+import { Logo } from './branding/index.ts';
 
 /**
  * PUBLIC_INTERFACE
@@ -10,8 +11,6 @@ import { fetchUnreadCount } from '../api/hooks/useNotifications.ts';
  */
 export default function Navbar() {
   const { user, role, ready, isAuthenticated } = useSupabaseAuth();
-  // Removed environment badge to avoid showing 'dev' or 'beta' labels in UI
-  const env = undefined;
   const [unread, setUnread] = useState(0);
 
   // Poll unread count every 30 seconds when authenticated
@@ -41,17 +40,53 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <div className="brand" style={{ background: 'transparent', border: 0, boxShadow: 'none', padding: 0 }}>
-        {/* Simple brand mark without any container box effects */}
-        <span style={{ width: 12, height: 12, background: 'var(--primary)', display: 'inline-block', borderRadius: 3 }} />
-        <Link to="/dashboard" style={{ background: 'transparent' }}>Gym Manager</Link>
-        
+      <div
+        className="brand brand--nochrome"
+        style={{
+          background: 'transparent',
+          border: 0,
+          boxShadow: 'none',
+          padding: 0,
+          alignItems: 'center',
+          display: 'flex',
+          gap: 10
+        }}
+      >
+        {/* Brand logo with no background/border/shadow */}
+        <Link
+          to="/dashboard"
+          className="brand-link"
+          aria-label="Gym Manager Home"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'transparent',
+            border: 0,
+            boxShadow: 'none',
+            padding: 0,
+          }}
+        >
+          <Logo size={112} className="header-logo-img" />
+        </Link>
+
         {ready && role && (
-          <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(5,150,105,0.08)', color: 'var(--success)', fontSize: 12 }}>
+          <span
+            className="helper"
+            style={{
+              marginLeft: 4,
+              padding: '2px 8px',
+              borderRadius: 999,
+              background: 'rgba(5,150,105,0.08)',
+              color: 'var(--success)',
+              fontSize: 12
+            }}
+          >
             {role}
           </span>
         )}
       </div>
+
       <div className="actions">
         {user ? (
           <>
@@ -101,6 +136,27 @@ export default function Navbar() {
           </>
         )}
       </div>
+
+      {/* Inline CSS hardening to ensure no white box around logo */}
+      <style>{`
+        .navbar .brand,
+        .navbar .brand.brand--nochrome,
+        .navbar .brand .brand-link,
+        .navbar .brand .header-logo-img,
+        .navbar .brand img.header-logo-img {
+          background: transparent !important;
+          border: 0 !important;
+          box-shadow: none !important;
+          outline: none !important;
+        }
+        .navbar .brand .brand-link:hover,
+        .navbar .brand .brand-link:focus,
+        .navbar .brand .brand-link:focus-visible {
+          background: transparent !important;
+          outline: none !important;
+          box-shadow: none !important;
+        }
+      `}</style>
     </header>
   );
 }

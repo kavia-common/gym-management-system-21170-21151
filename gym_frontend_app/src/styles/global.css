@@ -40,6 +40,25 @@ a {
   text-decoration: none;
 }
 
+/* Header brand/logo hardening (no background/border/shadow/outlines) */
+.navbar .brand,
+.navbar .brand .brand-link,
+.navbar .brand .header-logo-img,
+.navbar .brand img.header-logo-img {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+.navbar .brand .brand-link:hover,
+.navbar .brand .brand-link:focus,
+.navbar .brand .brand-link:focus-visible {
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Grid utilities */
 .grid {
   display: grid;

@@ -59,6 +59,10 @@
   justify-content: center;
   gap: 10px;
   margin-bottom: 8px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 .brand-avatar {
