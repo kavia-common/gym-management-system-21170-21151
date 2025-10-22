@@ -1,38 +1,64 @@
 import React, { useMemo, useState } from 'react';
 
-/**
- * We try to use import-based asset resolution as primary (works with CRA/Vite bundlers),
- * and gracefully fall back to public path /assets/logo.png if the import path is not present
- * in the repository structure.
- *
- * Note: In this project, images are served from public/assets. Importing a non-existent
- * src/assets/logo.png would fail compile-time, so we only rely on public path here.
- * If later an src/assets/logo.png is added, switching to import-based resolution is just:
- *   import logoUrl from '../../assets/logo.png';
- * and set `resolvedSrc = logoUrl`.
- */
-
 type LogoProps = {
-  /** Size in pixels for max width; height stays auto. Default 120. */
-  size?: number;
-  /** Optional alt text override. */
+  /** Explicit source URL. If provided, it will be used directly. */
+  src?: string;
+  /** Default descriptive alt text. */
   alt?: string;
+  /** Width for the image element. If not set, falls back to size for convenience. */
+  width?: number | string;
+  /** Height for the image element. If not set, uses 'auto' to preserve aspect ratio. */
+  height?: number | string;
+  /** Legacy convenience: size controls width and maxWidth. Default 120. */
+  size?: number;
   /** Optional className to merge. */
   className?: string;
 };
 
 // PUBLIC_INTERFACE
-export default function Logo({ size = 120, alt = 'Gym Manager Logo', className = '' }: LogoProps) {
-  const [imgFailed, setImgFailed] = useState(false);
+export default function Logo({
+  src,
+  alt = 'Gym Manager Logo',
+  width,
+  height,
+  size = 120,
+  className = '',
+}: LogoProps) {
+  const [srcIndex, setSrcIndex] = useState(0);
 
-  // Resolve via public path so it does not depend on TS type declarations for assets.
-  const resolvedSrc = useMemo(() => {
+  // Build a robust base path for public assets.
+  // In CRA/Vite builds, PUBLIC_URL may or may not be set. We normalize it here.
+  const basePublicPath = useMemo(() => {
     const base = (process.env.PUBLIC_URL || '').replace(/\/+$/, '');
-    const path = '/assets/logo.png';
-    return base ? `${base}${path}` : path;
+    return base || '';
   }, []);
 
+  // Candidates: prefer explicit src prop; otherwise try /logo.svg and /logo.png,
+  // each prefixed with PUBLIC_URL when present, then absolute root fallbacks.
+  const candidates = useMemo(() => {
+    if (src) {
+      return [src];
+    }
+    const svg = `${basePublicPath}/logo.svg`;
+    const png = `${basePublicPath}/logo.png`;
+    const fallbacks = ['/logo.svg', '/logo.png'];
+    const list = [svg, png, ...fallbacks];
+    // Deduplicate while preserving order
+    return Array.from(new Set(list));
+  }, [src, basePublicPath]);
+
+  const currentSrc = candidates[Math.min(srcIndex, candidates.length - 1)];
+
+  const handleError = () => {
+    // Advance to next candidate if available
+    setSrcIndex((i) => (i + 1 < candidates.length ? i + 1 : i));
+  };
+
   const mergedClass = `auth-logo ${className}`.trim();
+
+  // Resolve width/height based on provided props, maintaining backwards compatibility with size
+  const resolvedWidth = width ?? size;
+  const resolvedHeight = height ?? 'auto';
 
   return (
     <div
@@ -48,55 +74,29 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
       }}
       aria-label="Gym Manager brand"
     >
-      {!imgFailed ? (
-        <img
-          src={resolvedSrc}
-          alt={alt}
-          width={size}
-          style={{
-            maxWidth: size,
-            width: '100%',
-            height: 'auto',
-            objectFit: 'contain',
-            display: 'block',
-            background: 'transparent',
-            border: 0,
-            boxShadow: 'none',
-            outline: 'none',
-            WebkitMaskImage: 'none',
-            maskImage: 'none',
-          }}
-          className={mergedClass}
-          loading="eager"
-          decoding="async"
-          onError={() => setImgFailed(true)}
-        />
-      ) : (
-        // Graceful fallback: simple SVG-like shape with brand initials
-        <div
-          role="img"
-          aria-label={alt}
-          className={`${mergedClass} brand-logo`}
-          style={{
-            width: size,
-            height: size,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: size / 2,
-            // Remove border/background to avoid box-like fallback too
-            border: 0,
-            background: 'transparent',
-            color: 'var(--text, #111827)',
-            fontWeight: 800,
-            letterSpacing: 1,
-            fontFamily:
-              'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
-          }}
-        >
-          GM
-        </div>
-      )}
+      <img
+        src={currentSrc}
+        alt={alt}
+        width={resolvedWidth}
+        height={resolvedHeight}
+        style={{
+          maxWidth: typeof resolvedWidth === 'number' ? resolvedWidth : undefined,
+          width: typeof resolvedWidth === 'number' ? '100%' : resolvedWidth,
+          height: resolvedHeight,
+          objectFit: 'contain',
+          display: 'block',
+          background: 'transparent',
+          border: 0,
+          boxShadow: 'none',
+          outline: 'none',
+          WebkitMaskImage: 'none',
+          maskImage: 'none',
+        }}
+        className={mergedClass}
+        loading="eager"
+        decoding="async"
+        onError={handleError}
+      />
 
       <style>
         {`
@@ -128,7 +128,7 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
           /* Responsive tweak for smaller screens */
           @media (max-width: 480px) {
             .auth-logo {
-              max-width: ${Math.max(64, Math.min(120, size - 12))}px;
+              max-width: ${Math.max(64, Math.min(120, typeof size === 'number' ? size - 12 : 120))}px;
             }
           }
         `}
