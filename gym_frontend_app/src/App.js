@@ -10,6 +10,7 @@ import Trainers from './pages/Dashboard/Trainers';
 import Bookings from './pages/Dashboard/Bookings';
 import CheckoutResult from './pages/Payments/CheckoutResult';
 import AuthCallback from './pages/Auth/Callback.jsx';
+import AuthError from './pages/Auth/Error.jsx';
 import Notifications from './pages/Notifications.jsx';
 
 // Supabase auth
@@ -83,6 +84,7 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/auth/error" element={<AuthError />} />
               <Route path="/not-authorized" element={<NotAuthorized />} />
 
               {/* Authenticated routes */}
