@@ -1,1 +1,1 @@
-export { fetchWithAuth } from './client.ts';
+export { fetchWithAuth } from './client';
