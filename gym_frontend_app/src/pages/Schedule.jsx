@@ -1,15 +1,33 @@
 import React from 'react';
 import Card from '../components/Card';
 import SectionHeader from '../components/ui/SectionHeader.jsx';
+import Button from '../components/ui/Button.jsx';
 import { weeklySchedule } from '../data/demoContent';
+import { useSupabaseAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // PUBLIC_INTERFACE
-export default function SchedulePublic() {
+export default function Schedule() {
+  const { isAuthenticated } = useSupabaseAuth();
+  const nav = useNavigate();
+
+  if (!isAuthenticated) {
+    return (
+      <div className="card">
+        <SectionHeader
+          title="Schedule"
+          description="Please sign in to view and manage your schedule."
+          actions={<Button onClick={() => nav('/signin')}>Sign in</Button>}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="grid">
       <SectionHeader
-        title="Beginner Weekly Schedule"
-        description="A simple, sustainable plan to build momentum. Adjust timings to your preference."
+        title="Your Weekly Schedule"
+        description="Personalize your plan and track sessions."
       />
       <div className="grid cols-3">
         {weeklySchedule.map((d) => (
@@ -19,11 +37,6 @@ export default function SchedulePublic() {
           </Card>
         ))}
       </div>
-      <Card>
-        <div className="helper">
-          This schedule is read-only for all visitors. Sign in to personalize your plan and track sessions.
-        </div>
-      </Card>
     </div>
   );
 }

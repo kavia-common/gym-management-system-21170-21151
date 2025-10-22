@@ -99,8 +99,12 @@ function App() {
               <Route path="/overview" element={<PublicOverview />} />
               <Route path="/memberships" element={<PublicMemberships />} />
               <Route path="/trainers" element={<PublicTrainers />} />
-              <Route path="/schedule" element={<PublicSchedule />} />
-              <Route path="/member/home" element={<PublicMemberHome />} />
+
+              {/* Protected: Member Home and Schedule are only for authenticated users */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/schedule" element={<PublicSchedule />} />
+                <Route path="/member/home" element={<PublicMemberHome />} />
+              </Route>
 
               {/* Authenticated routes */}
               <Route element={<ProtectedRoute />}>

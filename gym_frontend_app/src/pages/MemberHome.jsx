@@ -6,18 +6,26 @@ import { useSupabaseAuth } from '../context/AuthContext';
 import { pricingPlans } from '../data/demoContent';
 import { useNavigate } from 'react-router-dom';
 
-// PUBLIC_INTERFACE
-export default function MemberHomePublic() {
-  const { isAuthenticated, user, profile } = useSupabaseAuth?.() || { isAuthenticated: false };
+/**
+ * PUBLIC_INTERFACE
+ * MemberHome: Member details page. Intended to be wrapped by ProtectedRoute.
+ * If rendered while unauthenticated (defensive), shows a small sign-in prompt.
+ */
+export default function MemberHome() {
+  const { isAuthenticated, user, profile } = useSupabaseAuth();
   const nav = useNavigate();
 
-  const demoProfile = {
-    name: "Taylor Demo",
-    age: 28,
-    gender: "Female",
-    membership: "3 Months",
-    expiry: "2025-03-31",
-  };
+  if (!isAuthenticated) {
+    return (
+      <div className="card">
+        <SectionHeader
+          title="Member Home"
+          description="Please sign in to view your member details."
+          actions={<Button onClick={() => nav('/signin')}>Sign in</Button>}
+        />
+      </div>
+    );
+  }
 
   const signedInProfile = {
     name: profile?.name || user?.email || "Member",
@@ -27,29 +35,21 @@ export default function MemberHomePublic() {
     expiry: profile?.membership_end ?? "—",
   };
 
-  const display = isAuthenticated ? signedInProfile : demoProfile;
-
   return (
     <div className="grid">
       <SectionHeader
         title="Member Home"
-        description={isAuthenticated ? "Welcome back! Here's a quick summary of your profile." : "Explore a sample member profile. Sign in to view your own details."}
-        actions={!isAuthenticated ? <Button onClick={() => nav('/signin')}>Sign in</Button> : null}
+        description="Welcome back! Here's a quick summary of your profile."
       />
       <div className="grid cols-3">
         <Card title="Profile">
-          <div><b>Name:</b> {display.name}</div>
-          <div><b>Age:</b> {display.age}</div>
-          <div><b>Gender:</b> {display.gender}</div>
+          <div><b>Name:</b> {signedInProfile.name}</div>
+          <div><b>Age:</b> {signedInProfile.age}</div>
+          <div><b>Gender:</b> {signedInProfile.gender}</div>
         </Card>
         <Card title="Membership">
-          <div><b>Plan:</b> {display.membership}</div>
-          <div><b>Expiry:</b> {display.expiry}</div>
-          {!isAuthenticated && (
-            <div style={{ marginTop: 10 }}>
-              <Button onClick={() => nav('/signin')}>Choose a plan</Button>
-            </div>
-          )}
+          <div><b>Plan:</b> {signedInProfile.membership}</div>
+          <div><b>Expiry:</b> {signedInProfile.expiry}</div>
         </Card>
         <Card title="Recommended">
           <div className="helper" style={{ marginBottom: 8 }}>
@@ -64,20 +64,10 @@ export default function MemberHomePublic() {
       </div>
 
       <Card title="Next steps">
-        <div className="helper" style={{ marginBottom: 8 }}>
-          Sign in to enroll in classes, book trainers, and track your progress.
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <a className="btn" href="/dashboard/member">Open Member Dashboard</a>
+          <a className="btn ghost" href="/dashboard/member/schedule">View Schedule</a>
         </div>
-        {!isAuthenticated ? (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Button onClick={() => nav('/signin')}>Sign in</Button>
-            <Button variant="ghost" onClick={() => nav('/signup')}>Create account</Button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <a className="btn" href="/dashboard/member">Open Member Dashboard</a>
-            <a className="btn ghost" href="/dashboard/member/schedule">View Schedule</a>
-          </div>
-        )}
       </Card>
     </div>
   );
