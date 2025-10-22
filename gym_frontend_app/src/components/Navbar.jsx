@@ -10,7 +10,8 @@ import { fetchUnreadCount } from '../api/hooks/useNotifications.ts';
  */
 export default function Navbar() {
   const { user, role, ready, isAuthenticated } = useSupabaseAuth();
-  const env = process.env.REACT_APP_APP_ENV || 'dev';
+  // Removed environment badge to avoid showing 'dev' or 'beta' labels in UI
+  const env = undefined;
   const [unread, setUnread] = useState(0);
 
   // Poll unread count every 30 seconds when authenticated
@@ -43,9 +44,7 @@ export default function Navbar() {
       <div className="brand">
         <span style={{ width: 12, height: 12, background: 'var(--primary)', display: 'inline-block', borderRadius: 3 }} />
         <Link to="/dashboard">Gym Manager</Link>
-        <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(30,58,138,0.08)', color: 'var(--primary)', fontSize: 12 }}>
-          {env}
-        </span>
+        
         {ready && role && (
           <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(5,150,105,0.08)', color: 'var(--success)', fontSize: 12 }}>
             {role}
