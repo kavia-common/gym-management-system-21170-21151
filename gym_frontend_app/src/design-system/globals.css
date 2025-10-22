@@ -1,0 +1,28 @@
+/* Design Things - Globals
+   This file is intended to import or define CSS variables coming from the Design Things kit.
+   If you have the official 'Design Things/globals.css', import it here instead of redefining.
+   For now, we map to our existing Ocean Professional variables to minimize visual changes. */
+
+:root {
+  /* Design Things token variables (bridge to current theme) */
+  --dt-primary: var(--primary);
+  --dt-secondary: var(--secondary);
+  --dt-success: var(--success);
+  --dt-error: var(--error);
+
+  --dt-background: var(--background);
+  --dt-surface: var(--surface);
+  --dt-text: var(--text);
+  --dt-muted: var(--muted);
+  --dt-border: var(--border);
+
+  --dt-radius: var(--card-radius);
+  --dt-shadow-sm: var(--shadow-sm);
+  --dt-shadow-md: var(--shadow-md);
+  --dt-shadow-lg: var(--shadow-lg);
+}
+
+/* If the Design Things package/file is available, replace this with:
+@import 'Design Things/globals.css';
+and optionally add any local overrides after the import.
+*/

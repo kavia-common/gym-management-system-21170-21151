@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Design Things globals bridge to ensure CSS variables exist app-wide */
+@import "./design-system/globals.css";
+
+/* Legacy base styles kept for fallback fonts */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

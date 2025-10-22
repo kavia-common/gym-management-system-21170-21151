@@ -1,4 +1,5 @@
 import React from 'react';
+// Migration note: This legacy Button is deprecated. Use `import { Button } from '../../design-system/ui'`.
 
 /**
  * PUBLIC_INTERFACE

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
+// Migration note: Sidebar is superseded by DTSidebar in AppLayout. Keep for compatibility if referenced directly.
 
 /**
  * PUBLIC_INTERFACE

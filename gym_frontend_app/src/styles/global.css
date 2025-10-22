@@ -1,4 +1,6 @@
-/* Ocean Professional Global Styles - Enhanced */
+/* Ocean Professional Global Styles - Enhanced
+   Note: Tailwind base/components/utilities are imported in src/index.css before this file.
+*/
 
 :root {
   --primary: #1E3A8A;

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu.tsx';
+// Design Things UI
+import { Button } from '../design-system/ui';
 
 /**
  * PUBLIC_INTERFACE
@@ -19,22 +21,23 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <nav className="actions" aria-label="Primary">
-        <NavLink className="btn ghost" to="/overview">Overview</NavLink>
-        <NavLink className="btn ghost" to="/memberships">Memberships</NavLink>
-        <NavLink className="btn ghost" to="/trainers">Trainers</NavLink>
-        <NavLink className="btn ghost" to="/schedule">Schedule</NavLink>
-        <NavLink className="btn ghost" to="/member/home">Member Home</NavLink>
+      <nav className="actions" aria-label="Primary" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        {/* Migration: replaced 'btn' classes with Design Things Button */}
+        <NavLink to="/overview"><Button variant="ghost" size="sm">Overview</Button></NavLink>
+        <NavLink to="/memberships"><Button variant="ghost" size="sm">Memberships</Button></NavLink>
+        <NavLink to="/trainers"><Button variant="ghost" size="sm">Trainers</Button></NavLink>
+        <NavLink to="/schedule"><Button variant="ghost" size="sm">Schedule</Button></NavLink>
+        <NavLink to="/member/home"><Button variant="ghost" size="sm">Member Home</Button></NavLink>
         {ready && isAuthenticated && user ? (
           <>
-            <NavLink className="btn ghost" to="/notifications">Notifications</NavLink>
-            <NavLink className="btn ghost" to="/account">Account</NavLink>
+            <NavLink to="/notifications"><Button variant="ghost" size="sm">Notifications</Button></NavLink>
+            <NavLink to="/account"><Button variant="ghost" size="sm">Account</Button></NavLink>
             <UserMenu />
           </>
         ) : (
-          <div className="auth-actions">
-            <Link className="btn btn--outline btn--compact" to="/signin">Sign In</Link>
-            <Link className="btn btn--primary btn--compact" to="/signup">Sign Up</Link>
+          <div className="auth-actions" style={{ display: 'flex', gap: 8 }}>
+            <Link to="/signin"><Button variant="ghost" size="sm">Sign In</Button></Link>
+            <Link to="/signup"><Button variant="primary" size="sm">Sign Up</Button></Link>
           </div>
         )}
       </nav>

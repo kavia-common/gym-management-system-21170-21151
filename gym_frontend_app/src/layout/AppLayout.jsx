@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
+// Design Things Sidebar
+import { Sidebar as DTSidebar } from '../design-system/ui';
 
 /**
  * PUBLIC_INTERFACE
@@ -35,85 +37,24 @@ export default function AppLayout({ children }) {
         gridArea: 'sidebar',
         background: 'var(--surface)',
         borderRight: '1px solid var(--border)',
-        padding: sidebarOpen ? '16px' : '0',
+        padding: 0,
         overflow: 'hidden',
         transition: 'padding 0.3s ease',
       }}>
         {sidebarOpen && (
-          <nav>
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
-                Overview
-              </div>
-              <NavLink
-                to="/dashboard"
-                end
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                Dashboard
-              </NavLink>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
-                Memberships
-              </div>
-              <NavLink
-                to="/dashboard/memberships"
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                Plans & Status
-              </NavLink>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
-                Classes & Trainers
-              </div>
-              <NavLink
-                to="/dashboard/classes"
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                Classes
-              </NavLink>
-              <NavLink
-                to="/dashboard/trainers"
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                Trainers
-              </NavLink>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
-                Bookings
-              </div>
-              <NavLink
-                to="/dashboard/bookings"
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                My Bookings
-              </NavLink>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
-                Settings
-              </div>
-              <NavLink
-                to="/account"
-                className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ display: 'block', padding: '10px 12px', borderRadius: '8px', marginBottom: '4px' }}
-              >
-                Account
-              </NavLink>
-            </div>
-          </nav>
+          <DTSidebar
+            groups={[
+              { label: 'Overview', items: [{ to: '/dashboard', label: 'Dashboard', end: true }] },
+              { label: 'Memberships', items: [{ to: '/dashboard/memberships', label: 'Plans & Status' }] },
+              { label: 'Classes & Trainers', items: [
+                { to: '/dashboard/classes', label: 'Classes' },
+                { to: '/dashboard/trainers', label: 'Trainers' },
+              ] },
+              { label: 'Bookings', items: [{ to: '/dashboard/bookings', label: 'My Bookings' }] },
+              { label: 'Settings', items: [{ to: '/account', label: 'Account' }] },
+            ]}
+            style={{ height: '100%' }}
+          />
         )}
       </aside>
 
@@ -122,8 +63,8 @@ export default function AppLayout({ children }) {
         {/* Hamburger button for mobile */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="btn ghost"
-          style={{ marginBottom: '16px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-[8px] border border-[var(--dt-primary)] text-[var(--dt-primary)] hover:bg-[var(--dt-primary)]/5"
+          style={{ marginBottom: '16px' }}
           aria-label="Toggle sidebar"
         >
           <span style={{ display: 'inline-block', width: '20px', height: '2px', background: 'currentColor', position: 'relative' }}>
