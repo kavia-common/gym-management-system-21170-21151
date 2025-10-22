@@ -39,7 +39,7 @@ export default function SignUp() {
 
         <footer className="card-footer">
           <p className="helper">
-            Already have an account? <Link to="/signin" style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign in</Link>
+            Already have an account? <Link to="/signin">Sign in</Link>
           </p>
           <Link className="btn ghost" to="/account" aria-label="Go to Account">Go to Account</Link>
         </footer>

@@ -1,5 +1,6 @@
 :root {
   --primary: #1E3A8A;
+  --primary-hover: #1b347c; /* slightly darker for hover */
   --secondary: #F59E0B;
   --success: #059669;
   --error: #DC2626;
@@ -10,6 +11,8 @@
   --border: #E5E7EB;
   --hover: #F9FAFB;
   --ring: 0 0 0 4px rgba(30,58,138,0.15);
+  --focus-ring: 0 0 0 2px rgba(30,58,138,0.5); /* explicit for buttons */
+  --shadow-subtle: 0 4px 10px rgba(30,58,138,0.2);
   --gradient-soft: linear-gradient(135deg, rgba(30,58,138,0.08), rgba(245,158,11,0.08));
 }
 
@@ -144,19 +147,23 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 16px;
-  border-radius: 10px;
+  padding: 0.875rem 1.125rem; /* 14px 18px */
+  border-radius: 12px;
   border: 1px solid var(--primary);
-  color: #fff;
+  color: #FFFFFF;
   background: var(--primary);
   cursor: pointer;
   width: 100%;
   font-weight: 600;
-  transition: transform 0.02s ease, box-shadow 0.2s ease, background 0.2s ease;
+  line-height: 1.25;
+  box-shadow: var(--shadow-subtle);
+  transition: transform 0.02s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn:hover {
-  filter: brightness(0.98);
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  filter: none;
 }
 
 .btn:active {
@@ -165,12 +172,14 @@
 
 .btn:focus-visible {
   outline: none;
-  box-shadow: var(--ring);
+  box-shadow: var(--focus-ring), var(--shadow-subtle);
 }
 
-.btn:disabled {
+.btn:disabled,
+.btn[aria-disabled="true"] {
   opacity: 0.6;
-  cursor: not-allowed;
+  cursor: not-allowed !important;
+  box-shadow: none;
 }
 
 .btn.ghost {
@@ -178,13 +187,41 @@
   color: var(--primary);
   border-color: var(--border);
   width: auto;
-  padding: 10px 14px;
+  padding: 0.625rem 0.875rem; /* 10px 14px */
+  box-shadow: none;
+}
+.btn.ghost:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 2px 6px rgba(245,158,11,0.15);
+}
+.btn.ghost:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(245,158,11,0.5);
 }
 
 .btn.secondary {
   background: #fff;
   color: var(--primary);
   border-color: var(--primary);
+}
+.btn.secondary:hover {
+  background: var(--hover);
+}
+.btn.success {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+.btn.success:hover {
+  filter: brightness(0.98);
+}
+.btn.destructive {
+  background: var(--error);
+  border-color: var(--error);
+  color: #fff;
+}
+.btn.destructive:hover {
+  filter: brightness(0.98);
 }
 
 .btn.success {
@@ -202,6 +239,11 @@
   background: #fff;
   color: var(--text);
   border-color: var(--border);
+  box-shadow: none;
+}
+.btn.google:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .btn.google:hover {
@@ -240,6 +282,21 @@
   display: grid;
   gap: 8px;
   justify-items: center;
+}
+.card-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.card-footer a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--secondary);
+  text-underline-offset: 3px;
+}
+.card-footer a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(245,158,11,0.5);
+  border-radius: 6px;
 }
 
 /* Responsive tweaks */

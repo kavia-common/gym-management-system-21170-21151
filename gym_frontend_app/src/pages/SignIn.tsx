@@ -43,7 +43,7 @@ export default function SignIn() {
 
         <footer className="card-footer">
           <p className="helper">
-            No account? <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create one</Link>
+            No account? <Link to="/signup">Create one</Link>
           </p>
           <Link className="btn ghost" to="/account" aria-label="Go to Account">Go to Account</Link>
         </footer>
