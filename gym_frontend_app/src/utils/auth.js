@@ -2,6 +2,20 @@ import { getSupabaseClient } from '../lib/supabaseClient';
 import { getURL } from './getURL';
 
 /**
+ * README (OAuth env):
+ * Required for GitHub button:
+ *  - REACT_APP_GITHUB_CLIENT_ID
+ *  - REACT_APP_GITHUB_OAUTH_REDIRECT_URI  (e.g., https://your-app.com/auth/callback)
+ * Optional:
+ *  - REACT_APP_SITE_URL  (used for email redirect and general callback resolution)
+ *
+ * Google/Supabase still use:
+ *  - REACT_APP_SUPABASE_URL
+ *  - REACT_APP_SUPABASE_KEY
+ *  - REACT_APP_GOOGLE_OAUTH_REDIRECT_URI (optional, else SITE_URL or current origin)
+ */
+
+/**
  * Resolve the redirect URL for OAuth callbacks.
  * Order of precedence:
  * 1. Explicit REACT_APP_GOOGLE_OAUTH_REDIRECT_URI

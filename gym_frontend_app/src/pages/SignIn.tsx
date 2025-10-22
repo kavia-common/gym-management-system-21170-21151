@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
 import GoogleButton from '../components/auth/GoogleButton.jsx';
+import GitHubButton from '../components/auth/GitHubButton.jsx';
 import Logo from '../components/branding/Logo.tsx';
 
 /**
@@ -45,6 +46,8 @@ export default function SignIn() {
         </div>
 
         <GoogleButton />
+        <div style={{ height: 8 }} />
+        <GitHubButton />
 
         <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">
