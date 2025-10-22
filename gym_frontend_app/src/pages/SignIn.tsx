@@ -26,7 +26,8 @@ export default function SignIn() {
       <section className="card" role="region" aria-labelledby="signin-title">
         <header className="card-header">
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
-            <Logo size={72} />
+            {/* Default Logo size is 120px as per component; explicit size can be set if needed */}
+            <Logo />
           </div>
           <div className="brand" aria-hidden="true">
             <div className="brand-avatar" />
