@@ -2,8 +2,6 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
-import GoogleButton from '../components/auth/GoogleButton.jsx';
-import GitHubButton from '../components/auth/GitHubButton.jsx';
 import Logo from '../components/branding/Logo.tsx';
 
 /**
@@ -34,20 +32,14 @@ export default function SignIn() {
             <div className="brand-avatar" />
             <div className="card-title" id="signin-title">Welcome back</div>
           </div>
-          <p className="card-subtitle">Sign in to manage your classes, memberships, and more.</p>
+          <p className="card-subtitle">Use email and password to sign in.</p>
         </header>
 
-        <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
-
-        <div className="divider" aria-hidden="true" style={{ margin: '12px 0' }}>
-          <div className="divider-line" />
-          <div className="divider-text">or continue with</div>
-          <div className="divider-line" />
+        <div className="helper" role="note" aria-live="polite" style={{ marginBottom: 8 }}>
+          Use email and password to sign in.
         </div>
 
-        <GoogleButton />
-        <div style={{ height: 8 }} />
-        <GitHubButton />
+        <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
 
         <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">

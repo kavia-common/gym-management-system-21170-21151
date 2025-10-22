@@ -25,7 +25,7 @@ export default function AuthError() {
             <li>Confirm .env variables are prefixed with REACT_APP_* and the app was restarted after changes.</li>
           </ul>
           <div style={{ marginTop: 16 }}>
-            <Link className="btn" to="/signin">Try again</Link>
+            <Link className="btn" to="/signin">Use email and password to sign in</Link>
           </div>
         </div>
       </section>

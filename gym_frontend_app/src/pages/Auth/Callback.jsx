@@ -97,5 +97,21 @@ export default function AuthCallback() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.hash, location.search, navigate, role, search]);
 
-  return <div className="card"><h3>Processing authentication...</h3></div>;
+  return (
+    <div className="content" style={{ maxWidth: 520, margin: '40px auto' }}>
+      <section className="card">
+        <div className="card-header">
+          <div className="card-title">Processing authentication...</div>
+        </div>
+        <div className="card-body">
+          <p className="helper" style={{ marginBottom: 8 }}>
+            If you landed here accidentally, please use your email and password to sign in.
+          </p>
+          <p>
+            <a className="btn" href="/signin">Go to Sign In</a>
+          </p>
+        </div>
+      </section>
+    </div>
+  );
 }
