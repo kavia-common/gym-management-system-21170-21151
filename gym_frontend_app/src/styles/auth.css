@@ -163,9 +163,31 @@
   cursor: pointer;
   width: 100%;
   font-weight: 600;
+  line-length: 1.25;
   line-height: 1.25;
   box-shadow: var(--shadow-subtle);
   transition: transform 0.02s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Compact auth-specific button modifier:
+   - Slightly reduced padding and font-size for a ~40-44px height target
+   - Keeps existing colors, hover, focus ring, and disabled states via base .btn
+*/
+.btn.btn-auth {
+  padding: 0.625rem 0.875rem; /* 10px 14px */
+  font-size: 0.95rem;         /* slightly smaller text */
+  border-radius: 10px;        /* a touch tighter to match compact height */
+}
+
+/* Tighten spacing around the submit area for auth forms */
+.form .btn.btn-auth {
+  margin-top: 4px;            /* reduced from default larger gaps */
+}
+
+/* Slightly tighter form grid for auth pages overall */
+.form {
+  display: grid;
+  gap: 12px; /* was 14px */
 }
 
 .btn:hover {

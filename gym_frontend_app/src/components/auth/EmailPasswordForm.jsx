@@ -93,7 +93,7 @@ export default function EmailPasswordForm({ mode = 'signin', onSubmit }) {
 
       {error && <div className="error-text" role="alert">{error}</div>}
 
-      <button className="btn" disabled={submitting} type="submit" aria-live="polite">
+      <button className="btn btn-auth" disabled={submitting} type="submit" aria-live="polite">
         {submitting ? (isSignup ? 'Creating…' : 'Signing in…') : (isSignup ? 'Create account' : 'Sign In')}
       </button>
     </form>

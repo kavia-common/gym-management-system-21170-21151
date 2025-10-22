@@ -38,7 +38,7 @@ export default function SignIn() {
 
         <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
 
-        <div className="divider" aria-hidden="true">
+        <div className="divider" aria-hidden="true" style={{ margin: '12px 0' }}>
           <div className="divider-line" />
           <div className="divider-text">or continue with</div>
           <div className="divider-line" />
@@ -46,7 +46,7 @@ export default function SignIn() {
 
         <GoogleButton />
 
-        <footer className="card-footer">
+        <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">
             No account? <Link to="/signup">Create one</Link>
           </p>

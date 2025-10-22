@@ -42,7 +42,7 @@ export default function SignUp() {
         <EmailPasswordForm mode="signup" onSubmit={handleEmailPassword} />
         {info && <div className="helper" role="status" style={{ marginTop: 8 }}>{info}</div>}
 
-        <footer className="card-footer">
+        <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">
             Already have an account? <Link to="/signin">Sign in</Link>
           </p>
