@@ -21,29 +21,33 @@ export default function SignIn() {
   };
 
   return (
-    <div className="content" style={{ maxWidth: 520, margin: '40px auto' }}>
+    <main className="auth-bg">
       <section className="card" role="region" aria-labelledby="signin-title">
-        <div className="card-header">
-          <div className="card-title" id="signin-title">Sign in</div>
-        </div>
+        <header className="card-header">
+          <div className="brand" aria-hidden="true">
+            <div className="brand-avatar" />
+            <div className="card-title" id="signin-title">Welcome back</div>
+          </div>
+          <p className="card-subtitle">Sign in to manage your classes, memberships, and more.</p>
+        </header>
 
         <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 12, margin: '16px 0' }}>
-          <div style={{ height: 1, background: 'var(--border)' }} />
-          <div className="helper">or</div>
-          <div style={{ height: 1, background: 'var(--border)' }} />
+        <div className="divider" aria-hidden="true">
+          <div className="divider-line" />
+          <div className="divider-text">or continue with</div>
+          <div className="divider-line" />
         </div>
 
         <GoogleButton />
 
-        <p className="helper" style={{ marginTop: 16 }}>
-          No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
-        </p>
-        <div style={{ marginTop: 8 }}>
-          <Link className="btn ghost" to="/account">Go to Account</Link>
-        </div>
+        <footer className="card-footer">
+          <p className="helper">
+            No account? <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create one</Link>
+          </p>
+          <Link className="btn ghost" to="/account" aria-label="Go to Account">Go to Account</Link>
+        </footer>
       </section>
-    </div>
+    </main>
   );
 }

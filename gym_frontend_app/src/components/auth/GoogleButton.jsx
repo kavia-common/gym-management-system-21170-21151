@@ -35,16 +35,18 @@ export default function GoogleButton({ onError }) {
   return (
     <div>
       <button
-        className="btn"
+        className="btn google"
         type="button"
         onClick={handleClick}
         disabled={pending}
         aria-label="Continue with Google"
+        aria-describedby={info ? 'google-info' : undefined}
       >
+        <span className="google-icon" aria-hidden="true" />
         {pending ? 'Contacting Google…' : 'Continue with Google'}
       </button>
       {info && (
-        <div className="helper" style={{ marginTop: 8 }} role="status">
+        <div className="helper" id="google-info" style={{ marginTop: 8 }} role="status" aria-live="polite">
           {info}
         </div>
       )}
