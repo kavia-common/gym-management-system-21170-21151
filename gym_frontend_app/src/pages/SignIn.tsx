@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
 import GoogleButton from '../components/auth/GoogleButton.jsx';
+import Logo from '../components/branding/Logo.tsx';
 
 /**
  * PUBLIC_INTERFACE
@@ -24,6 +25,7 @@ export default function SignIn() {
     <main className="auth-bg">
       <section className="card" role="region" aria-labelledby="signin-title">
         <header className="card-header">
+          <Logo />
           <div className="brand" aria-hidden="true">
             <div className="brand-avatar" />
             <div className="card-title" id="signin-title">Welcome back</div>
