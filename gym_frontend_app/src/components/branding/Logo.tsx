@@ -36,11 +36,15 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
 
   return (
     <div
-      className="logo-wrap"
+      className="logo-wrap header-logo"
       style={{
         display: 'flex',
         justifyContent: 'center',
         marginBottom: 12,
+        background: 'transparent',
+        border: 0,
+        padding: 0,
+        boxShadow: 'none',
       }}
       aria-label="Gym Manager brand"
     >
@@ -55,6 +59,10 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
             height: 'auto',
             objectFit: 'contain',
             display: 'block',
+            background: 'transparent',
+            border: 0,
+            boxShadow: 'none',
+            outline: 'none',
           }}
           className={mergedClass}
           loading="eager"
@@ -66,7 +74,7 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
         <div
           role="img"
           aria-label={alt}
-          className={mergedClass}
+          className={`${mergedClass} brand-logo`}
           style={{
             width: size,
             height: size,
@@ -74,9 +82,9 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: size / 2,
-            border: '1px solid var(--border, #E5E7EB)',
-            background:
-              'radial-gradient(circle at 30% 20%, rgba(30,58,138,0.12), rgba(245,158,11,0.12))',
+            // Remove border/background to avoid box-like fallback too
+            border: 0,
+            background: 'transparent',
             color: 'var(--text, #111827)',
             fontWeight: 800,
             letterSpacing: 1,
@@ -90,6 +98,23 @@ export default function Logo({ size = 120, alt = 'Gym Manager Logo', className =
 
       <style>
         {`
+          /* Ensure logo and wrapper are always transparent and unboxed */
+          .header-logo,
+          .brand-logo,
+          .logo-wrap {
+            background: transparent !important;
+            border: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+          }
+          .auth-logo {
+            display: block;
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            margin-inline: auto;
+          }
           /* Responsive tweak for smaller screens */
           @media (max-width: 480px) {
             .auth-logo {

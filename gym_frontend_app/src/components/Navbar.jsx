@@ -41,9 +41,10 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <div className="brand">
+      <div className="brand" style={{ background: 'transparent', border: 0, boxShadow: 'none', padding: 0 }}>
+        {/* Simple brand mark without any container box effects */}
         <span style={{ width: 12, height: 12, background: 'var(--primary)', display: 'inline-block', borderRadius: 3 }} />
-        <Link to="/dashboard">Gym Manager</Link>
+        <Link to="/dashboard" style={{ background: 'transparent' }}>Gym Manager</Link>
         
         {ready && role && (
           <span className="helper" style={{ marginLeft: 8, padding: '2px 8px', borderRadius: 999, background: 'rgba(5,150,105,0.08)', color: 'var(--success)', fontSize: 12 }}>
