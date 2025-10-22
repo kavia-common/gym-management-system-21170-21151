@@ -7,13 +7,9 @@ import { useSupabaseAuth } from '../../context/AuthContext';
  * PUBLIC_INTERFACE
  * AuthCallback:
  * - Handles Supabase OAuth callback (e.g., Google) using getSessionFromUrl.
- * - Also handles GitHub OAuth demo flow. If provider=github (via state or query) and a "code" param exists,
- *   this page will either:
- *   - In demo mode (no backend exchange): navigate to /auth/error with guidance.
- *   - If backend is available in future: exchange code for tokens (TODO: add integration).
- *
- * Notes:
- * - PKCE: If implemented in the future, retrieve code_verifier from sessionStorage for the token request.
+ * - Handles GitHub OAuth callback by detecting provider via state/query; if code present but no backend,
+ *   navigates to /auth/error with guidance.
+ * On success: routes to role-based dashboard. On failure: routes to /auth/error.
  */
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -30,6 +26,7 @@ export default function AuthCallback() {
         // Detect GitHub code flow return
         const code = search.get('code');
         const stateParam = search.get('state');
+        const providerHint = search.get('provider');
         const fromState = (() => {
           if (!stateParam) return null;
           try {
@@ -41,18 +38,14 @@ export default function AuthCallback() {
         })();
 
         const isGitHub =
+          providerHint === 'github' ||
           (typeof fromState === 'object' && fromState?.provider === 'github') ||
-          String(fromState).toLowerCase().includes('github') ||
-          search.get('provider') === 'github';
+          String(fromState || '').toLowerCase().includes('github');
 
         if (code && isGitHub) {
-          // DEMO MODE: No backend exchange implemented in this repo.
-          // Show a friendly message with instructions to configure backend or Supabase custom flow.
           const msg =
-            'Returned from GitHub with ?code. Token exchange is not configured in frontend. ' +
-            'Please add a backend endpoint to exchange the code for tokens ' +
-            '(using REACT_APP_GITHUB_CLIENT_ID/SECRET) and then establish a session. ' +
-            'After implementing, redirect back to the app and set auth state.';
+            'Returned from GitHub with code. A backend token exchange is required and is not configured in this app. ' +
+            'Please implement a backend endpoint to exchange the code for tokens and establish a session.';
           navigate('/auth/error', {
             replace: true,
             state: { message: msg },
@@ -68,7 +61,7 @@ export default function AuthCallback() {
           return;
         }
 
-        // Supabase v2 supports getSessionFromUrl for OAuth exchange (e.g., Google)
+        // Handle Supabase OAuth (e.g., Google)
         const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
         if (error) {
           // eslint-disable-next-line no-console
@@ -83,7 +76,7 @@ export default function AuthCallback() {
           return;
         }
 
-        // No session after callback -> go to sign-in
+        // No session -> go to sign-in
         navigate('/signin', { replace: true });
       } catch (e) {
         // eslint-disable-next-line no-console
@@ -92,7 +85,6 @@ export default function AuthCallback() {
       }
     };
 
-    // Only run on mount or when hash/search changes
     handle();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.hash, location.search, navigate, role, search]);

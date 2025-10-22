@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '../context/AuthContext';
 import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
+import GoogleButton from '../components/auth/GoogleButton.jsx';
+import GitHubButton from '../components/auth/GitHubButton.jsx';
 import Logo from '../components/branding/Logo.tsx';
 
 /**
  * PUBLIC_INTERFACE
- * SignIn: Email/password login via Supabase.
+ * SignIn: Email/password login via Supabase, with Google and GitHub OAuth options.
  */
 export default function SignIn() {
   const { signIn, role } = useSupabaseAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [oauthInfo, setOauthInfo] = useState('');
   const from = (location.state as any)?.from?.pathname || null;
 
   const handleEmailPassword = async (email: string, password: string) => {
@@ -32,14 +35,26 @@ export default function SignIn() {
             <div className="brand-avatar" />
             <div className="card-title" id="signin-title">Welcome back</div>
           </div>
-          <p className="card-subtitle">Use email and password to sign in.</p>
+          <p className="card-subtitle">Sign in to continue.</p>
         </header>
 
-        <div className="helper" role="note" aria-live="polite" style={{ marginBottom: 8 }}>
-          Use email and password to sign in.
+        <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
+
+        <div className="divider" aria-hidden="true">
+          <div className="divider-line" />
+          <div className="divider-text">or</div>
+          <div className="divider-line" />
         </div>
 
-        <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />
+        <div style={{ display: 'grid', gap: 10 }}>
+          <GoogleButton onError={(m)=>setOauthInfo(m)} />
+          <GitHubButton onError={(m)=>setOauthInfo(m)} />
+          {oauthInfo ? (
+            <div className="helper" role="status" aria-live="polite" style={{ marginTop: 4 }}>
+              {oauthInfo}
+            </div>
+          ) : null}
+        </div>
 
         <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">
