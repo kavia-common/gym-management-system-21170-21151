@@ -25,7 +25,9 @@ export default function SignIn() {
     <main className="auth-bg">
       <section className="card" role="region" aria-labelledby="signin-title">
         <header className="card-header">
-          <Logo />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+            <Logo size={72} />
+          </div>
           <div className="brand" aria-hidden="true">
             <div className="brand-avatar" />
             <div className="card-title" id="signin-title">Welcome back</div>

@@ -28,7 +28,9 @@ export default function SignUp() {
     <main className="auth-bg">
       <section className="card" role="region" aria-labelledby="signup-title">
         <header className="card-header">
-          <Logo />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+            <Logo size={72} />
+          </div>
           <div className="brand" aria-hidden="true">
             <div className="brand-avatar" />
             <div className="card-title" id="signup-title">Create your account</div>
