@@ -65,6 +65,25 @@
   padding: 0 !important;
 }
 
+/* Auth page header/logo area hardening to ensure no \"box\" appears around/near the logo */
+.auth-bg .card .card-header,
+.auth-bg .card .card-header .logo-wrap,
+.auth-bg .card .card-header .header-logo,
+.auth-bg .card .card-header .auth-logo {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+
+/* If any residual avatar remains (from prior markup or other pages), make it fully transparent on auth screens */
+.auth-bg .card .card-header .brand-avatar {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 .brand-avatar {
   width: 40px;
   height: 40px;
