@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import api from '../../services/apiClient';
+import DemoPanel from '../../components/DemoPanel.jsx';
 
 /**
  * PUBLIC_INTERFACE
@@ -27,7 +28,9 @@ export default function Overview() {
   }, []);
 
   return (
-    <div className="grid cols-2">
+    <>
+      <DemoPanel />
+      <div className="grid cols-2">
       <Card title="Membership">
         {loading ? 'Loading...' : (
           membership ? (
@@ -63,5 +66,6 @@ export default function Overview() {
         )}
       </Card>
     </div>
+    </>
   );
 }

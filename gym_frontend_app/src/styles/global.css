@@ -145,3 +145,14 @@ textarea:focus-visible {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
 }
+
+/* Demo banner */
+.demo-banner {
+  background: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+  color: #7c2d12;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -41,6 +41,11 @@ export default function SignUp() {
 
         <EmailPasswordForm mode="signup" onSubmit={handleEmailPassword} />
         {info && <div className="helper" role="status" style={{ marginTop: 8 }}>{info}</div>}
+        {((process.env.REACT_APP_DEMO_MODE || '').toString().toLowerCase() === 'true') && (
+          <div className="callout" style={{ marginTop: 10 }}>
+            Demo mode is enabled. After signing up, head to the <Link to="/dashboard">dashboard</Link> to explore Classes, Trainers, and Memberships. Use the banner to reset demo data anytime.
+          </div>
+        )}
 
         <footer className="card-footer" style={{ marginTop: 10 }}>
           <p className="helper">
