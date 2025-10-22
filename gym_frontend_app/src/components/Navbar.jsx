@@ -20,6 +20,11 @@ export default function Navbar() {
       </div>
 
       <nav className="actions" aria-label="Primary">
+        <NavLink className="btn ghost" to="/overview">Overview</NavLink>
+        <NavLink className="btn ghost" to="/memberships">Memberships</NavLink>
+        <NavLink className="btn ghost" to="/trainers">Trainers</NavLink>
+        <NavLink className="btn ghost" to="/schedule">Schedule</NavLink>
+        <NavLink className="btn ghost" to="/member/home">Member Home</NavLink>
         {ready && isAuthenticated && user ? (
           <>
             <NavLink className="btn ghost" to="/notifications">Notifications</NavLink>

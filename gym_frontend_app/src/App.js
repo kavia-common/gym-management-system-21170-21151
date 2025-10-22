@@ -5,10 +5,15 @@ import './styles/auth.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import DemoBanner from './components/DemoBanner.jsx';
-import Overview from './pages/Dashboard/Overview';
+import Overview from './pages/Overview.jsx';
 import Memberships from './pages/Dashboard/Memberships';
 import Classes from './pages/Dashboard/Classes';
 import Trainers from './pages/Dashboard/Trainers';
+import PublicOverview from './pages/Overview.jsx';
+import PublicMemberships from './pages/Memberships.jsx';
+import PublicTrainers from './pages/Trainers.jsx';
+import PublicSchedule from './pages/Schedule.jsx';
+import PublicMemberHome from './pages/MemberHome.jsx';
 import Bookings from './pages/Dashboard/Bookings';
 import CheckoutResult from './pages/Payments/CheckoutResult';
 import AuthCallback from './pages/Auth/Callback.jsx';
@@ -89,6 +94,13 @@ function App() {
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/auth/error" element={<AuthError />} />
               <Route path="/not-authorized" element={<NotAuthorized />} />
+
+              {/* Public read-only routes */}
+              <Route path="/overview" element={<PublicOverview />} />
+              <Route path="/memberships" element={<PublicMemberships />} />
+              <Route path="/trainers" element={<PublicTrainers />} />
+              <Route path="/schedule" element={<PublicSchedule />} />
+              <Route path="/member/home" element={<PublicMemberHome />} />
 
               {/* Authenticated routes */}
               <Route element={<ProtectedRoute />}>
