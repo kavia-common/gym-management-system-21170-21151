@@ -211,13 +211,13 @@
   gap: 8px; /* compact spacing between Sign In / Sign Up */
 }
 
-/* Compact button utility - shared across header and auth pages */
+/* Compact button utility - primarily for auth pages; safe in header too but no header overrides here */
 .btn--compact {
   padding: 8px 12px; /* ~32-36px height target */
   font-size: 0.9rem;
   border-radius: 10px;
   line-height: 1.2;
-  width: auto; /* header buttons should size to content */
+  width: auto;
 }
 
 /* Solid primary compact */

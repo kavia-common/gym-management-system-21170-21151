@@ -60,31 +60,6 @@ a { color: inherit; text-decoration: none; }
   gap: 10px;
   color: var(--primary);
   font-weight: 700;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  padding: 0;
-}
-
-/* Ensure the logo and its wrappers do not get any background/border/shadow */
-.navbar .brand,
-.navbar .brand .brand-link,
-.navbar .brand .header-logo-img,
-.navbar .brand img.header-logo-img {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-  padding: 0 !important;
-}
-
-/* Prevent hover/focus from adding background to the brand anchor */
-.navbar .brand .brand-link:hover,
-.navbar .brand .brand-link:focus,
-.navbar .brand .brand-link:focus-visible {
-  background: transparent !important;
-  outline: none !important;
-  box-shadow: none !important;
 }
 
 .navbar .actions {
