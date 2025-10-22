@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getSupabaseClient } from '../../lib/supabaseClient';
+import { getSupabaseClient } from '../../lib/supabaseClient.ts';
 import api from '../../services/apiClient';
 
 /**

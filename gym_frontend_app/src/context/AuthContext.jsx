@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { getSupabaseClient } from '../lib/supabaseClient';
-// Import TS module from JS by path; CRA with our shims allows this
-import { fetchWithAuth } from '../api/client.ts';
+import { getSupabaseClient } from '../lib/supabaseClient.ts';
+import { fetchWithAuth } from '../api/client';
 import api from '../services/apiClient';
 
 /**
