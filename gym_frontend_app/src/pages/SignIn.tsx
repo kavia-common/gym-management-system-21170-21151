@@ -31,11 +31,10 @@ export default function SignIn() {
             {/* Default Logo size is 120px as per component; explicit size can be set if needed */}
             <Logo />
           </div>
-          <div className="brand" aria-hidden="true" style={{ background: 'transparent', border: 0, boxShadow: 'none', padding: 0 }}>
+          <div className="brand" aria-hidden="true" style={{ background: 'transparent', border: 0, boxShadow: 'none', padding: 0, justifyContent: 'center', textAlign: 'center', width: '100%' }}>
             {/* Removed brand-avatar to eliminate any perceived box near the logo */}
             <div className="card-title" id="signin-title">Welcome back</div>
           </div>
-          <p className="card-subtitle">Sign in to continue.</p>
         </header>
 
         <EmailPasswordForm mode="signin" onSubmit={handleEmailPassword} />

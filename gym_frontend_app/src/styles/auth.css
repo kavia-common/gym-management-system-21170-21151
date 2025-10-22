@@ -41,6 +41,15 @@
   text-align: center;
 }
 
+/* Ensure heading inside the auth card is centered horizontally */
+.auth-bg .card .brand,
+.auth-bg .card .card-title {
+  text-align: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Ensure logos on auth pages scale nicely */
 .auth-logo {
   max-width: 100%;
