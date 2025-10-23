@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getSupabaseClient } from '../../lib/supabaseClient.ts';
+import { getSupabaseClient } from '../../lib/supabaseClient';
 import { useSupabaseAuth } from '../../context/AuthContext';
 
 /**

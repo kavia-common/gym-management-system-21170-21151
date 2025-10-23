@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '../lib/supabaseClient.ts';
+import { getSupabaseClient } from '../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { getSupabaseClient } from '../lib/supabaseClient.ts';
+import { getSupabaseClient } from '../lib/supabaseClient';
 import { fetchWithAuth } from '../api/client';
 import api from '../services/apiClient';
 
