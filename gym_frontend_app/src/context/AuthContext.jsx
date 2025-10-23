@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { fetchWithAuth } from '../api/client';
 import api from '../services/apiClient';
+import { getRedirectUriForAuthCallback } from '../config/oauth';
 
 /**
  * PUBLIC_INTERFACE
@@ -156,14 +157,12 @@ export function AuthProvider({ children }) {
       },
       // PUBLIC_INTERFACE
       async signUp(email, password) {
-        const siteUrl =
-          process.env.REACT_APP_SITE_URL ||
-          (typeof window !== 'undefined' ? window.location.origin : undefined);
         const { error, data } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: siteUrl || undefined,
+            // Use centralized redirect, which respects REACT_APP_GOOGLE_OAUTH_REDIRECT_URI or SITE_URL/auth/callback
+            emailRedirectTo: getRedirectUriForAuthCallback({ preferProvider: 'google' }),
           },
         });
         if (error) throw error;

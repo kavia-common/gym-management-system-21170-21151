@@ -1,5 +1,5 @@
 import { getSupabaseClient } from '../lib/supabaseClient';
-import { getURL } from './getURL';
+import { getRedirectUriForAuthCallback, getGoogleOAuthConfig } from '../config/oauth';
 
 /**
  * README (OAuth env):
@@ -16,23 +16,10 @@ import { getURL } from './getURL';
  */
 
 /**
- * Resolve the redirect URL for OAuth callbacks.
- * Order of precedence:
- * 1. Explicit REACT_APP_GOOGLE_OAUTH_REDIRECT_URI
- * 2. SITE_URL (if provided by runtime)
- * 3. window.location.origin + /auth/callback
+ * Use centralized redirect resolver to ensure consistency across the app.
  */
 function resolveOAuthRedirect() {
-  const explicit = process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URI;
-  if (explicit && typeof explicit === 'string') return explicit;
-
-  const siteUrl = process.env.REACT_APP_SITE_URL;
-  if (siteUrl && typeof siteUrl === 'string') {
-    return siteUrl.endsWith('/') ? `${siteUrl}auth/callback` : `${siteUrl}/auth/callback`;
-  }
-
-  // Fall back to current origin
-  return `${getURL()}auth/callback`;
+  return getRedirectUriForAuthCallback({ preferProvider: 'google' });
 }
 
 /**
@@ -46,6 +33,10 @@ export const signInWithOAuth = async (provider) => {
   }
 
   const redirectTo = resolveOAuthRedirect();
+  if (process.env.NODE_ENV !== 'production' && !redirectTo) {
+    // eslint-disable-next-line no-console
+    console.warn('[oauth] Dev warning: No redirect URI resolved for OAuth. Check REACT_APP_GOOGLE_OAUTH_REDIRECT_URI or REACT_APP_SITE_URL.');
+  }
 
   try {
     const supabase = getSupabaseClient();
@@ -102,12 +93,7 @@ export const signInWithGoogle = async () => {
  */
 export const signUp = async (email, password) => {
   const supabase = getSupabaseClient();
-  const siteUrl =
-    process.env.REACT_APP_SITE_URL ||
-    (typeof window !== 'undefined' ? window.location.origin : undefined);
-  const emailRedirectTo = siteUrl
-    ? (siteUrl.endsWith('/') ? `${siteUrl}auth/callback` : `${siteUrl}/auth/callback`)
-    : `${getURL()}auth/callback`;
+  const emailRedirectTo = getRedirectUriForAuthCallback({ preferProvider: 'google' });
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -124,12 +110,13 @@ export const signUp = async (email, password) => {
  */
 export const resetPassword = async (email) => {
   const supabase = getSupabaseClient();
+  // Build reset password redirect using SITE_URL if provided; otherwise default to current origin
   const siteUrl =
     process.env.REACT_APP_SITE_URL ||
-    (typeof window !== 'undefined' ? window.location.origin : undefined);
+    (typeof window !== 'undefined' ? window.location.origin : '');
   const redirectTo = siteUrl
     ? (siteUrl.endsWith('/') ? `${siteUrl}auth/reset-password` : `${siteUrl}/auth/reset-password`)
-    : `${getURL()}auth/reset-password`;
+    : '/auth/reset-password';
 
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo,

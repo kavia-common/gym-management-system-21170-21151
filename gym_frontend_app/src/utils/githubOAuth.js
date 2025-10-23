@@ -1,19 +1,11 @@
- /**
-  * PUBLIC_INTERFACE
-  * buildGitHubAuthorizeUrl: Constructs GitHub OAuth authorize URL.
-  */
+import { buildGitHubAuthorizeUrl as buildFromConfig } from '../config/oauth';
+
+/**
+ * PUBLIC_INTERFACE
+ * buildGitHubAuthorizeUrl: Constructs GitHub OAuth authorize URL using centralized config.
+ */
 export function buildGitHubAuthorizeUrl({ clientId, redirectUri, scope = 'read:user user:email', state }) {
-  if (!clientId) throw new Error('Missing GitHub clientId');
-  if (!redirectUri) throw new Error('Missing GitHub redirectUri');
-  const base = 'https://github.com/login/oauth/authorize';
-  const params = new URLSearchParams({
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    response_type: 'code',
-    scope,
-  });
-  if (state) params.set('state', state);
-  return `${base}?${params.toString()}`;
+  return buildFromConfig({ clientId, redirectUri, scope, state });
 }
 
 /**

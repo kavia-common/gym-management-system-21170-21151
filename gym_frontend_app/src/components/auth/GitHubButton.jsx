@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { getURL } from '../../utils/getURL';
+import { getGitHubOAuthConfig, buildGitHubAuthorizeUrl } from '../../config/oauth';
 
 /**
  * PUBLIC_INTERFACE
@@ -24,19 +24,7 @@ export default function GitHubButton({ onError }) {
   const [info, setInfo] = useState('');
   const [pending, setPending] = useState(false);
 
-  const clientId =
-    (typeof window !== 'undefined' &&
-      window.__APP_CONFIG__ &&
-      window.__APP_CONFIG__.GITHUB_CLIENT_ID) ||
-    process.env.REACT_APP_GITHUB_CLIENT_ID;
-
-  const redirectUri =
-    (typeof window !== 'undefined' &&
-      window.__APP_CONFIG__ &&
-      window.__APP_CONFIG__.GITHUB_OAUTH_REDIRECT_URI) ||
-    process.env.REACT_APP_GITHUB_OAUTH_REDIRECT_URI ||
-    // Fallback to current origin + /auth/callback if not provided
-    `${getURL()}auth/callback`;
+  const { clientId, redirectUri, scope } = getGitHubOAuthConfig();
 
   // Prepare state param; include provider hint for callback handler
   const state = useMemo(() => {
