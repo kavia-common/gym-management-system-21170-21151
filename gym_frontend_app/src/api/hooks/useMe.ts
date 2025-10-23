@@ -14,11 +14,16 @@ export function useMe() {
 
   const getBaseUrl = api.getBaseUrl(); // reuse configured API base URL
 
+  const buildUrl = (path: string) =>
+    `${getBaseUrl}/../..`.endsWith('/api/v1')
+      ? `${getBaseUrl.replace(/\/api\/v1$/, '')}${path}`
+      : `${getBaseUrl}${path}`;
+
   const fetchMe = async () => {
     setLoading(true);
     setError('');
     try {
-      const resp = await fetchWithAuth(`${getBaseUrl}/../..`.endsWith('/api/v1') ? `${getBaseUrl.replace(/\/api\/v1$/, '')}/api/me` : `${getBaseUrl}/api/me`);
+      const resp = await fetchWithAuth(buildUrl('/api/me'));
       if (!resp.ok) {
         const text = await resp.text();
         throw new Error(text || `Request failed with ${resp.status}`);
@@ -36,7 +41,7 @@ export function useMe() {
   // Demo ping to /api/protected to show a success message when logged in
   const pingProtected = async (): Promise<{ ok: boolean; message?: string }> => {
     try {
-      const resp = await fetchWithAuth(`${getBaseUrl}/../..`.endsWith('/api/v1') ? `${getBaseUrl.replace(/\/api\/v1$/, '')}/api/protected` : `${getBaseUrl}/api/protected`);
+      const resp = await fetchWithAuth(buildUrl('/api/protected'));
       if (!resp.ok) return { ok: false, message: `HTTP ${resp.status}` };
       const json = await resp.json();
       return { ok: true, message: json?.message || 'ok' };

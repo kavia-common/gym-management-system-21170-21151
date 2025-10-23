@@ -3,38 +3,50 @@ import { getSupabaseClient } from '../lib/supabaseClient';
 /**
  * PUBLIC_INTERFACE
  * fetchWithAuth: Wrapper around fetch that injects Bearer access_token from Supabase (if available).
- * - Captures native fetch once to avoid recursion
- * - Reads current session via supabase.auth.getSession()
- * - Sets Authorization: Bearer <access_token>
- * - On 401 response, attempts supabase.auth.refreshSession() once and retries
- * - If still 401, signs out and redirects to /signin
- * Notes:
- * - We do NOT assign window.fetch to this wrapper; the wrapper is exported and used explicitly.
- * - Includes a simple reentrancy guard to prevent nested wrapping/recursion.
+ * Key safety measures:
+ *  - baseFetch is captured from the native fetch once and never replaced.
+ *  - Token refresh path uses baseFetch, never calls fetchWithAuth to avoid recursion.
+ *  - A recursion guard header X-Internal-Request prevents intercepting our own requests.
+ *  - Retry is limited to 1 on 401.
+ *
+ * Usage: import { fetchWithAuth } from 'src/api/client';
  */
-const nativeFetch: typeof window.fetch =
+
+// Capture native fetch once. If unavailable, throw meaningful error.
+const baseFetch: typeof window.fetch =
   typeof window !== 'undefined' && typeof window.fetch === 'function'
     ? window.fetch.bind(window)
-    : (globalThis.fetch as any)?.bind(globalThis) ?? ((...args: any[]) => {
+    : (globalThis.fetch as any)?.bind(globalThis) ??
+      ((..._args: any[]) => {
         throw new Error('Fetch API is not available in this environment.');
       });
 
+// Simple reentrancy flag as a last-resort guard
 let isCalling = false;
+
+// Internal header name for recursion guard
+const INTERNAL_HEADER = 'X-Internal-Request';
 
 // PUBLIC_INTERFACE
 export async function fetchWithAuth(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
   const supabase = getSupabaseClient();
 
-  // Reentrancy guard: if somehow re-entering, fall back to native fetch without auth changes
   if (isCalling) {
+    // Fallback to baseFetch if re-entrant for any reason
     if (process.env.NODE_ENV === 'development') {
-      // minimal dev-only log
       // eslint-disable-next-line no-console
-      console.debug('[fetchWithAuth] reentrant call detected, delegating directly to native fetch');
+      console.debug('[fetchWithAuth] reentrant call detected, delegating directly to baseFetch');
     }
-    return nativeFetch(input as any, init as any);
+    return baseFetch(input as any, init as any);
   }
 
+  // If an upstream caller already marked the request as internal, do not modify
+  const incomingHeaders = new Headers(init.headers || {});
+  if (incomingHeaders.get(INTERNAL_HEADER) === '1') {
+    return baseFetch(input as any, init as any);
+  }
+
+  // Build auth headers with current access token
   async function buildHeaders(): Promise<Headers> {
     const { data } = await supabase.auth.getSession();
     const token = data.session?.access_token;
@@ -42,6 +54,9 @@ export async function fetchWithAuth(input: RequestInfo | URL, init: RequestInit 
     if (!headers.get('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
+    // Mark as internal so we won't re-intercept via other layers
+    headers.set(INTERNAL_HEADER, '1');
+
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     } else {
@@ -50,45 +65,53 @@ export async function fetchWithAuth(input: RequestInfo | URL, init: RequestInit 
     return headers;
   }
 
+  // Perform fetch with current token, optionally after a refresh
+  async function doRequest(withRefresh: boolean): Promise<Response> {
+    let headers = await buildHeaders();
+    let resp = await baseFetch(input as any, { ...init, headers } as any);
+
+    if (resp.status !== 401 || !withRefresh) {
+      return resp;
+    }
+
+    // Try one refresh cycle using Supabase, ensure we do not call ourselves
+    try {
+      await supabase.auth.refreshSession();
+    } catch {
+      // ignore; will sign out on subsequent 401
+    }
+
+    headers = await buildHeaders();
+    resp = await baseFetch(input as any, { ...init, headers } as any);
+    return resp;
+  }
+
   isCalling = true;
   try {
-    // First attempt using native fetch
-    let headers = await buildHeaders();
-    let resp = await nativeFetch(input as any, { ...init, headers } as any);
+    // First attempt; if 401, allow a single refresh-and-retry
+    let response = await doRequest(true);
 
-    // If unauthorized, try refresh once
-    if (resp.status === 401) {
+    if (response.status === 401) {
+      // If still unauthorized, sign out and redirect to signin
       try {
-        await supabase.auth.refreshSession(); // will update session if refresh token exists
+        await supabase.auth.signOut();
       } catch {
-        // ignore; will fall through to sign out
+        // ignore sign out failures
       }
-      headers = await buildHeaders();
-      resp = await nativeFetch(input as any, { ...init, headers } as any);
-
-      if (resp.status === 401) {
-        try {
-          await supabase.auth.signOut();
-        } catch {
-          // ignore
-        }
-        if (typeof window !== 'undefined') {
-          // Redirect to signin
-          const current = window.location.pathname + window.location.search + window.location.hash;
-          const redirectTo = `/signin?from=${encodeURIComponent(current)}`;
-          if (window.location.pathname !== '/signin') {
-            window.location.replace(redirectTo);
-          }
+      if (typeof window !== 'undefined') {
+        const current = window.location.pathname + window.location.search + window.location.hash;
+        const redirectTo = `/signin?from=${encodeURIComponent(current)}`;
+        if (window.location.pathname !== '/signin') {
+          window.location.replace(redirectTo);
         }
       }
     }
 
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line no-console
-      console.debug('[fetchWithAuth] request', input, { status: resp.status });
+      console.debug('[fetchWithAuth]', { input, status: response.status });
     }
-
-    return resp;
+    return response;
   } finally {
     isCalling = false;
   }

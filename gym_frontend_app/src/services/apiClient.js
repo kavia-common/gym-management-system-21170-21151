@@ -1,4 +1,5 @@
 import axios from 'axios';
+// Note: This axios client is independent of fetchWithAuth to avoid circular auth recursion.
 
 // Get Base URL from runtime config if available, else .env, else fallback
 function getBaseUrl() {
