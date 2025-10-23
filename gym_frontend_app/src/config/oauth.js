@@ -91,6 +91,11 @@ export function getRedirectUriForAuthCallback({ preferProvider } = {}) {
   return `${getURL()}auth/callback`;
 }
 
+export const OAUTH_PROVIDERS = {
+  GOOGLE: 'google',
+  GITHUB: 'github',
+};
+
 // PUBLIC_INTERFACE
 export function getGoogleOAuthConfig() {
   /** Returns Google OAuth config based on env/runtime. */

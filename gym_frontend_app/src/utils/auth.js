@@ -32,6 +32,19 @@ export const signInWithOAuth = async (provider) => {
     return { data: null, error: new Error('No OAuth provider specified') };
   }
 
+  // Normalize and validate provider id
+  const normalized = String(provider).toLowerCase().trim();
+
+  // PUBLIC_INTERFACE: Allowed providers when using Supabase on frontend
+  const SUPPORTED = new Set(['google', 'github']);
+
+  if (!SUPPORTED.has(normalized)) {
+    // Small runtime warning for unknown provider strings
+    // eslint-disable-next-line no-console
+    console.warn(`[oauth] Unsupported provider "${provider}". Supported providers: google, github.`);
+    return { data: null, error: new Error('Unsupported OAuth provider') };
+  }
+
   const redirectTo = resolveOAuthRedirect();
   if (process.env.NODE_ENV !== 'production' && !redirectTo) {
     // eslint-disable-next-line no-console
@@ -41,9 +54,9 @@ export const signInWithOAuth = async (provider) => {
   try {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider,
+      provider: normalized, // must be exactly 'google' or 'github'
       options: {
-        redirectTo,
+        redirectTo, // ensure this matches src/config/oauth.js resolution
         // Optional: force redirect flow for web apps
         queryParams: {
           // hd: could be set for workspace restriction if needed
@@ -57,7 +70,7 @@ export const signInWithOAuth = async (provider) => {
       error:
         e instanceof Error
           ? e
-          : new Error('Failed to initiate OAuth sign-in. If Google is not enabled in Supabase, please enable it or use email/password.'),
+          : new Error('Failed to initiate OAuth sign-in. If provider is not enabled in Supabase, please enable it or use email/password.'),
     };
   }
 };

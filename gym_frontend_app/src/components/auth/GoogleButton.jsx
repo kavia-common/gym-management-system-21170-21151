@@ -66,7 +66,7 @@ function normalizeError(errorLike) {
   }
   // Handle common redirect misconfiguration hints
   if (/redirect/i.test(msg)) {
-    return 'Google sign-in configuration issue. Verify the Redirect URL matches this app’s /auth/ccallback and environment variables are set.';
+    return 'Google sign-in configuration issue. Verify the Redirect URL matches this app’s /auth/callback and environment variables are set.';
   }
   return msg;
 }

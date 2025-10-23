@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useSupabaseAuth } from '../context/AuthContext';
+import { useSupabaseAuth } from '../context';
 import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
 import GoogleButton from '../components/auth/GoogleButton.jsx';
 import GitHubButton from '../components/auth/GitHubButton.jsx';

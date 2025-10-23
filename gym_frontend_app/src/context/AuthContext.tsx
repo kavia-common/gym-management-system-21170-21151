@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { getSupabase } from '../lib/supabaseClient.js';
+import { getSupabaseClient } from '../lib/supabaseClient.js';
 
 /**
  * Note: This TSX AuthContext is the canonical provider/hook for auth in the app.
@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 // PUBLIC_INTERFACE
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const supabase = getSupabase();
+  const supabase = getSupabaseClient();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -75,11 +75,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!hasGoogle) return undefined;
 
     return async () => {
-      const redirectTo = process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URI;
+      // Use centralized resolver in config/oauth.js semantics:
+      const siteUrl = process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URI || process.env.REACT_APP_SITE_URL
+        ? (process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URI || (process.env.REACT_APP_SITE_URL?.endsWith('/') ? `${process.env.REACT_APP_SITE_URL}auth/callback` : `${process.env.REACT_APP_SITE_URL}/auth/callback`))
+        : undefined;
+
       await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: 'google', // enforce exact lowercase
         options: {
-          redirectTo,
+          redirectTo: siteUrl,
         },
       });
     };

@@ -46,6 +46,7 @@ export default function AuthCallback() {
           const msg =
             'Returned from GitHub with code. A backend token exchange is required and is not configured in this app. ' +
             'Please implement a backend endpoint to exchange the code for tokens and establish a session.';
+          // Do not attempt to call any custom endpoints like /api/v1/auth/github/callback when Supabase is used on frontend.
           navigate('/auth/error', {
             replace: true,
             state: { message: msg },

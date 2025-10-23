@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { getGitHubOAuthConfig, buildGitHubAuthorizeUrl } from '../../config/oauth';
+import { getGitHubOAuthConfig } from '../../config/oauth';
 
 /**
  * PUBLIC_INTERFACE
