@@ -47,13 +47,14 @@ import ProgramBuilder from './pages/Trainer/Workouts/ProgramBuilder.jsx';
 function RootRedirect() {
   const { ready, isAuthenticated, role } = useSupabaseAuth();
   if (!ready) {
+    // Avoid premature redirects until auth bootstrap completes
     return <div className="card">Loading...</div>;
   }
   // If not authenticated, navigate to Sign In once (replace prevents history growth)
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;
   }
-  // Authenticated: choose role target
+  // Authenticated: choose role target (default to member when role unknown)
   const target = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
   return <Navigate to={target} replace />;
 }
