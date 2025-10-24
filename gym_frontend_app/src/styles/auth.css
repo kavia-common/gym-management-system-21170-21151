@@ -470,3 +470,23 @@
     font-size: 1.35rem;
   }
 }
+
+/* Auth route safety: disable pointer events for likely overlays/header within auth background,
+   but re-enable for the interactive card and its descendants. This prevents accidental click
+   interception by fixed navbars or generic overlays that may exist globally. */
+.auth-bg .navbar,
+.auth-bg .overlay,
+.auth-bg [data-overlay="true"] {
+  pointer-events: none !important;
+}
+
+.auth-bg .card,
+.auth-bg .card * {
+  pointer-events: auto;
+}
+
+/* QA outline to visualize click targets when enabled via data-qa-outline */
+[data-qa-outline="true"] {
+  outline: 2px dashed rgba(30,58,138,0.7);
+  outline-offset: 2px;
+}

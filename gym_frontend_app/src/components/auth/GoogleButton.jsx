@@ -32,6 +32,13 @@ export default function GoogleButton({ onError }) {
     }
   };
 
+  // Toggle QA outline
+  const qaOutline =
+    (typeof window !== 'undefined' &&
+      window.__APP_CONFIG__ &&
+      window.__APP_CONFIG__.AUTH_DEBUG) ||
+    process.env.REACT_APP_AUTH_DEBUG === 'true';
+
   return (
     <div>
       <button
@@ -41,6 +48,8 @@ export default function GoogleButton({ onError }) {
         disabled={pending}
         aria-label="Continue with Google"
         aria-describedby={info ? 'google-info' : undefined}
+        data-testid="google-oauth-button"
+        data-qa-outline={qaOutline ? 'true' : 'false'}
       >
         <span className="google-icon" aria-hidden="true" />
         {pending ? 'Contacting Google…' : 'Continue with Google'}

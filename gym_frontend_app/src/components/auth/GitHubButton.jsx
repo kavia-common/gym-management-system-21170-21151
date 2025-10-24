@@ -95,6 +95,13 @@ export default function GitHubButton({ onError }) {
     return info;
   })();
 
+  // Toggle a QA outline for click-target debugging
+  const qaOutline =
+    (typeof window !== 'undefined' &&
+      window.__APP_CONFIG__ &&
+      window.__APP_CONFIG__.AUTH_DEBUG) ||
+    process.env.REACT_APP_AUTH_DEBUG === 'true';
+
   return (
     <div>
       <button
@@ -106,6 +113,9 @@ export default function GitHubButton({ onError }) {
         aria-label="Continue with GitHub"
         aria-describedby={helper ? 'github-info' : undefined}
         title="Continue with GitHub"
+        data-testid="github-oauth-button"
+        data-authorize-url={authorizeUrl || ''}
+        data-qa-outline={qaOutline ? 'true' : 'false'}
         style={{ pointerEvents: 'auto' }}
       >
         <span className="github-icon" aria-hidden="true" />
