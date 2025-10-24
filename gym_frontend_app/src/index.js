@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './App.css';
+import './styles/auth.css';
 import App from './App';
 import { loadRuntimeConfig } from './config/runtimeConfig';
 import { AuthProvider } from './context';
