@@ -31,7 +31,7 @@ function setStoredTokens(tokens) {
  * PUBLIC_INTERFACE
  * AuthProvider: Provides auth state, actions, and user profile.
  */
-export function AuthProvider({ children }) {
+export function LegacyAuthProvider({ children }) {
   const [tokens, setTokens] = useState(() => getStoredTokens());
   const [user, setUser] = useState(null);
   const isAuthenticated = !!(tokens?.access_token);

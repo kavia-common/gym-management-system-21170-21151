@@ -1,1 +1,1 @@
-export { AuthProvider, useSupabaseAuth, useAuth, useRole } from './AuthContext.jsx';
+export { AuthProvider, useSupabaseAuth, useAuth, useRole } from './AuthContext.tsx';

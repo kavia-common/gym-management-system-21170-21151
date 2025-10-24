@@ -11,6 +11,9 @@ type AuthContextValue = {
   session: Session | null;
   user: User | null;
   loading: boolean;
+  ready: boolean;
+  isAuthenticated: boolean;
+  role: string | null;
   // PUBLIC_INTERFACE
   signInWithEmail: (email: string) => Promise<{ success: boolean; message: string }>;
   // PUBLIC_INTERFACE
@@ -26,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const supabase = getSupabaseClient();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
 
   // Initialize session and subscribe to auth state changes
   useEffect(() => {
@@ -35,10 +39,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!isMounted) return;
       setSession(data.session ?? null);
       setLoading(false);
+      setReady(true);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
+      // keep ready true after first init
+      setReady(true);
     });
 
     return () => {
@@ -97,10 +104,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   }, [supabase]);
 
+  const roleFromMeta =
+    (user as any)?.app_metadata?.role ||
+    (user as any)?.user_metadata?.role ||
+    null;
+
   const value: AuthContextValue = {
     session,
     user,
     loading,
+    ready,
+    isAuthenticated: !!session?.access_token,
+    role: roleFromMeta,
     signInWithEmail,
     signInWithGoogle: maybeGoogleSignIn,
     signOut,
