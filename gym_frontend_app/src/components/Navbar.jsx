@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useSupabaseAuth } from '../context';
-import UserMenu from './UserMenu.tsx';
-// Design Things UI
 import { Button } from '../design-system/ui';
+
+/**
+ * Lazy load the TS UserMenu component. If the import fails at runtime,
+ * return a no-op component to prevent white screens.
+ */
+const LazyUserMenu = lazy(async () => {
+  try {
+    const mod = await import('./UserMenu.tsx');
+    return { default: mod.default || mod };
+  } catch {
+    return { default: () => null };
+  }
+});
 
 /**
  * PUBLIC_INTERFACE
@@ -32,7 +43,9 @@ export default function Navbar() {
           <>
             <NavLink to="/notifications"><Button variant="ghost" size="sm">Notifications</Button></NavLink>
             <NavLink to="/account"><Button variant="ghost" size="sm">Account</Button></NavLink>
-            <UserMenu />
+            <Suspense fallback={null}>
+              <LazyUserMenu />
+            </Suspense>
           </>
         ) : (
           <div className="auth-actions" style={{ display: 'flex', gap: 8 }}>

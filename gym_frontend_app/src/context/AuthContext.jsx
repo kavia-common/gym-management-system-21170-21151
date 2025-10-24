@@ -30,6 +30,10 @@ const AuthContext = createContext(/** @type {AuthContextValue|null} */(null));
  */
 function getMeUrl() {
   const base = api.getBaseUrl();
+  if (!base || typeof base !== 'string') {
+    // Fallback to relative path; backend router should handle /api/me
+    return '/api/me';
+  }
   return `${base}/../..`.endsWith('/api/v1')
     ? `${base.replace(/\/api\/v1$/, '')}/api/me`
     : `${base}/api/me`;

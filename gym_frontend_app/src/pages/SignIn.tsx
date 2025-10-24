@@ -15,7 +15,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
   const [oauthInfo, setOauthInfo] = useState('');
-  const from = (location.state as any)?.from?.pathname || null;
+  const from = (location && (location as any).state && (location as any).state.from && (location as any).state.from.pathname) || null;
 
   const handleEmailPassword = async (email: string, password: string) => {
     await signIn(email, password);

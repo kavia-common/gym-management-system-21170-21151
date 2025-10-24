@@ -34,7 +34,12 @@ function Root() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    loadRuntimeConfig().then(() => setReady(true));
+    loadRuntimeConfig()
+      .then(() => setReady(true))
+      .catch(() => {
+        // Non-fatal: continue rendering to allow app to show error boundaries
+        setReady(true);
+      });
   }, []);
 
   // Ensure AuthProvider wraps the whole app tree so all routes/pages can use the auth context.

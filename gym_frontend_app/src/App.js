@@ -49,11 +49,11 @@ function RootRedirect() {
   if (!ready) {
     return <div className="card">Loading...</div>;
   }
-  // Unauthed -> signin
+  // If not authenticated, navigate to Sign In once (replace prevents history growth)
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;
   }
-  // Authed role-based redirect
+  // Authenticated: choose role target
   const target = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
   return <Navigate to={target} replace />;
 }
