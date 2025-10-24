@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/Card';
 import api from '../../services/apiClient';
 import { loadGisScript, initGis, renderGoogleButton, promptOneTap } from '../../services/gis';
+import GitHubButton from '../../components/auth/GitHubButton.jsx'; // Ensure full clickable GitHub OAuth button
 
 /**
  * PUBLIC_INTERFACE
@@ -150,6 +151,16 @@ export default function Login() {
             or <b>REACT_APP_GOOGLE_CLIENT_ID</b> in your <span style={{ fontFamily: "mono" }}>.env</span> file and reload the app.
           </div>
         )}
+
+        {/* Divider */}
+        <div className="divider" style={{ marginTop: 16 }}>
+          <div className="divider-line" />
+          <div className="divider-text">or</div>
+          <div className="divider-line" />
+        </div>
+
+        {/* GitHub Sign-In button */}
+        <GitHubButton onError={(msg) => console.warn('GitHub OAuth error:', msg)} />
 
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
