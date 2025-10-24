@@ -24,7 +24,7 @@ export default function GitHubButton({ onError }) {
   const [info, setInfo] = useState('');
   const [pending, setPending] = useState(false);
 
-  const { clientId, redirectUri, scope } = getGitHubOAuthConfig();
+  const { clientId, redirectUri } = getGitHubOAuthConfig();
 
   // Prepare state param; include provider hint for callback handler
   const state = useMemo(() => {

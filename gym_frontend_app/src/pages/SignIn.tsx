@@ -25,7 +25,7 @@ export default function SignIn() {
 
   return (
     <main className="auth-bg">
-      <section className="card" role="region" aria-labelledby="signin-title">
+      <section className="card" aria-labelledby="signin-title">
         <header className="card-header" style={{ background: 'transparent', boxShadow: 'none' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
             {/* Default Logo size is 120px as per component; explicit size can be set if needed */}

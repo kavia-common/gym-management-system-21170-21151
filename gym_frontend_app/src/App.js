@@ -5,7 +5,6 @@ import './styles/auth.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import DemoBanner from './components/DemoBanner.jsx';
-import Overview from './pages/Overview.jsx';
 import Memberships from './pages/Dashboard/Memberships';
 import Classes from './pages/Dashboard/Classes';
 import Trainers from './pages/Dashboard/Trainers';

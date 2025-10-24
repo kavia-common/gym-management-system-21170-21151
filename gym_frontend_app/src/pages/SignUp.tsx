@@ -26,7 +26,7 @@ export default function SignUp() {
 
   return (
     <main className="auth-bg">
-      <section className="card" role="region" aria-labelledby="signup-title">
+      <section className="card" aria-labelledby="signup-title">
         <header className="card-header">
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
             {/* Default Logo size is 120px as per component; explicit size can be set if needed */}

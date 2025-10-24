@@ -1,5 +1,5 @@
 import { getSupabaseClient } from '../lib/supabaseClient';
-import { getRedirectUriForAuthCallback, getGoogleOAuthConfig } from '../config/oauth';
+import { getRedirectUriForAuthCallback } from '../config/oauth';
 
 /**
  * README (OAuth env):

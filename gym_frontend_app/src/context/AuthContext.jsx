@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { getSupabaseClient } from '../lib/supabaseClient';
 import { fetchWithAuth } from '../api/client';
 import api from '../services/apiClient';
@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
   const [ready, setReady] = useState(false); // one-time init done
 
   // Fetch /api/me using Supabase access token
-  const loadMe = async () => {
+  const loadMe = useCallback(async () => {
     // Load the role/profile derived from backend; ensure consistent state
     try {
       if (!session?.access_token) {
@@ -83,7 +83,7 @@ export function AuthProvider({ children }) {
       setProfile(null);
       setRole(null);
     }
-  };
+  }, [session]);
 
   // Initialize and subscribe to auth state changes
   useEffect(() => {
@@ -186,7 +186,7 @@ export function AuthProvider({ children }) {
         return data.session?.access_token || null;
       },
     }),
-    [user, session, profile, role, loading, ready, supabase]
+    [user, session, profile, role, loading, ready, supabase, loadMe]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

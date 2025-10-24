@@ -26,7 +26,7 @@ export default function TrainersPublic() {
             <div style={{ display: 'flex', gap: 16 }}>
               <img
                 src={t.photo}
-                alt={`${t.name} photo`}
+                alt={t.name}
                 style={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 12 }}
               />
               <div>
