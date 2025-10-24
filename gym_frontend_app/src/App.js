@@ -26,7 +26,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
 import NotAuthorized from './pages/NotAuthorized.jsx';
-import { useSupabaseAuth } from './context';
+import { useSupabaseAuth } from './context'; // ensure all auth hooks come from context barrel
 
 // Member pages
 import MemberDashboard from './pages/Member/MemberDashboard.jsx';

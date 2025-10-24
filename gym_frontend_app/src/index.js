@@ -25,6 +25,11 @@ function Loader() {
   );
 }
 
+/**
+ * PUBLIC_INTERFACE
+ * Root: loads runtime config then renders the App wrapped with a single AuthProvider.
+ * Ensures provider composition is stable across the entire app.
+ */
 function Root() {
   const [ready, setReady] = useState(false);
 
