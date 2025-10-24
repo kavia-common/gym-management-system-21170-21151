@@ -6,7 +6,11 @@ import App from './App';
 import { loadRuntimeConfig } from './config/runtimeConfig';
 import { AuthProvider } from './context';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootEl = document.getElementById('root');
+if (!rootEl) {
+  throw new Error('Root element #root not found in document.');
+}
+const root = ReactDOM.createRoot(rootEl);
 
 function Loader() {
   return (

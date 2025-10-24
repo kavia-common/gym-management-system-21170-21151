@@ -5,6 +5,7 @@ import './styles/auth.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import DemoBanner from './components/DemoBanner.jsx';
+// Note: AuthBoundary intentionally not used to avoid masking provider errors during runtime.
 import Memberships from './pages/Dashboard/Memberships';
 import Classes from './pages/Dashboard/Classes';
 import Trainers from './pages/Dashboard/Trainers';
@@ -48,14 +49,13 @@ function RootRedirect() {
   if (!ready) {
     return <div className="card">Loading...</div>;
   }
+  // Unauthed -> signin
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;
   }
-  if (role === 'trainer') {
-    return <Navigate to="/dashboard/trainer" replace />;
-  }
-  // default to member
-  return <Navigate to="/dashboard/member" replace />;
+  // Authed role-based redirect
+  const target = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
+  return <Navigate to={target} replace />;
 }
 
 function RoleDashboard() {
