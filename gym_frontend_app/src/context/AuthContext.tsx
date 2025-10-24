@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { getSupabaseClient, signInWithProvider, signOut as supaSignOut } from '../lib/supabaseClient';
+import { getSupabaseClient, signInWithProvider, signOut as supaSignOut } from '../lib/supabaseClient.ts';
 
 /**
  * Note: This TSX AuthContext is the canonical provider/hook for auth in the app.

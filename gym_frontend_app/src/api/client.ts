@@ -1,4 +1,4 @@
-import { getSupabaseClient, signOut } from '../lib/supabaseClient';
+import { getSupabaseClient, signOut } from '../lib/supabaseClient.ts';
 
 /**
  * PUBLIC_INTERFACE

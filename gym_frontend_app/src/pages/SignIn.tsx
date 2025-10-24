@@ -5,7 +5,7 @@ import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
 import GoogleButton from '../components/auth/GoogleButton.jsx';
 import GitHubButton from '../components/auth/GitHubButton.jsx';
 import Logo from '../components/branding/Logo.tsx';
-import { signInWithEmailPassword } from '../lib/supabaseClient';
+import { signInWithEmailPassword } from '../lib/supabaseClient.ts';
 
 /**
  * PUBLIC_INTERFACE
