@@ -20,9 +20,7 @@ import AuthError from './pages/Auth/Error.jsx';
 import Notifications from './pages/Notifications.jsx';
 
 // Supabase auth
-import { AuthProvider } from './context';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import AuthBoundary from './components/AuthBoundary.jsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
@@ -73,80 +71,69 @@ function App() {
    * and route configuration including protected and role-gated routes.
    */
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div className="app-shell">
-          <AuthBoundary>
-            <Navbar />
-            <DemoBanner />
-            <Sidebar />
-          </AuthBoundary>
-          <main className="content">
-            <AuthBoundary>
-              <Routes>
-              {/* Root route: if authenticated, send to role-specific dashboard. Otherwise to /signin */}
-              <Route
-                path="/"
-                element={
-                  <RootRedirect />
-                }
-              />
+    <BrowserRouter>
+      <div className="app-shell">
+        <Navbar />
+        <DemoBanner />
+        <Sidebar />
+        <main className="content">
+          <Routes>
+            {/* Root route: if authenticated, send to role-specific dashboard. Otherwise to /signin */}
+            <Route path="/" element={<RootRedirect />} />
 
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/auth/error" element={<AuthError />} />
-              <Route path="/not-authorized" element={<NotAuthorized />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/auth/error" element={<AuthError />} />
+            <Route path="/not-authorized" element={<NotAuthorized />} />
 
-              {/* Public read-only routes */}
-              <Route path="/overview" element={<PublicOverview />} />
-              <Route path="/memberships" element={<PublicMemberships />} />
-              <Route path="/trainers" element={<PublicTrainers />} />
+            {/* Public read-only routes */}
+            <Route path="/overview" element={<PublicOverview />} />
+            <Route path="/memberships" element={<PublicMemberships />} />
+            <Route path="/trainers" element={<PublicTrainers />} />
 
-              {/* Protected: Member Home and Schedule are only for authenticated users */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/schedule" element={<PublicSchedule />} />
-                <Route path="/member/home" element={<PublicMemberHome />} />
-              </Route>
+            {/* Protected: Member Home and Schedule are only for authenticated users */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/schedule" element={<PublicSchedule />} />
+              <Route path="/member/home" element={<PublicMemberHome />} />
+            </Route>
 
-              {/* Authenticated routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/dashboard" element={<RoleDashboard />} />
-                <Route path="/dashboard/memberships" element={<Memberships />} />
-                <Route path="/dashboard/classes" element={<Classes />} />
-                <Route path="/dashboard/trainers" element={<Trainers />} />
-                <Route path="/dashboard/bookings" element={<Bookings />} />
-                <Route path="/checkout/result" element={<CheckoutResult />} />
-                <Route path="/account" element={<Account />} />
-              </Route>
+            {/* Authenticated routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<RoleDashboard />} />
+              <Route path="/dashboard/memberships" element={<Memberships />} />
+              <Route path="/dashboard/classes" element={<Classes />} />
+              <Route path="/dashboard/trainers" element={<Trainers />} />
+              <Route path="/dashboard/bookings" element={<Bookings />} />
+              <Route path="/checkout/result" element={<CheckoutResult />} />
+              <Route path="/account" element={<Account />} />
+            </Route>
 
-              {/* Notifications: members and trainers */}
-              <Route element={<ProtectedRoute allowedRoles={['member', 'trainer']} />}>
-                <Route path="/notifications" element={<Notifications />} />
-              </Route>
+            {/* Notifications: members and trainers */}
+            <Route element={<ProtectedRoute allowedRoles={['member', 'trainer']} />}>
+              <Route path="/notifications" element={<Notifications />} />
+            </Route>
 
-              {/* Role-gated routes */}
-              {/* Member-only area */}
-              <Route element={<ProtectedRoute allowedRoles={['member']} />}>
-                <Route path="/dashboard/member" element={<MemberDashboard />} />
-                <Route path="/dashboard/member/schedule" element={<Schedule />} />
-                <Route path="/dashboard/member/progress" element={<Progress />} />
-              </Route>
-              {/* Trainer-only area: all routes below require role 'trainer' */}
-              <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
-                <Route path="/dashboard/trainer" element={<TrainerDashboard />} />
-                <Route path="/dashboard/trainer/clients" element={<TrainerClients />} />
-                <Route path="/dashboard/trainer/workouts/templates" element={<TrainerTemplates />} />
-                <Route path="/dashboard/trainer/workouts/program-builder" element={<ProgramBuilder />} />
-              </Route>
+            {/* Role-gated routes */}
+            {/* Member-only area */}
+            <Route element={<ProtectedRoute allowedRoles={['member']} />}>
+              <Route path="/dashboard/member" element={<MemberDashboard />} />
+              <Route path="/dashboard/member/schedule" element={<Schedule />} />
+              <Route path="/dashboard/member/progress" element={<Progress />} />
+            </Route>
+            {/* Trainer-only area: all routes below require role 'trainer' */}
+            <Route element={<ProtectedRoute allowedRoles={['trainer']} />}>
+              <Route path="/dashboard/trainer" element={<TrainerDashboard />} />
+              <Route path="/dashboard/trainer/clients" element={<TrainerClients />} />
+              <Route path="/dashboard/trainer/workouts/templates" element={<TrainerTemplates />} />
+              <Route path="/dashboard/trainer/workouts/program-builder" element={<ProgramBuilder />} />
+            </Route>
 
-              <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />
-            </Routes>
-            </AuthBoundary>
-          </main>
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+            <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 

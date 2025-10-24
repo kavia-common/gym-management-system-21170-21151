@@ -4,6 +4,7 @@ import './index.css';
 import './App.css';
 import App from './App';
 import { loadRuntimeConfig } from './config/runtimeConfig';
+import { AuthProvider } from './context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -27,7 +28,12 @@ function Root() {
     loadRuntimeConfig().then(() => setReady(true));
   }, []);
 
-  return ready ? <App /> : <Loader />;
+  // Ensure AuthProvider wraps the whole app tree so all routes/pages can use the auth context.
+  return ready ? (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  ) : <Loader />;
 }
 
 root.render(<Root />);
