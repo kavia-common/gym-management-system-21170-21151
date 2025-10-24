@@ -1,32 +1,35 @@
 import React, { useMemo } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import getSiteURL from '../../utils/getURL';
 
 /**
  * PUBLIC_INTERFACE
- * GoogleButton:
- * A11y-friendly Google OAuth button using Supabase Auth.
- * Initiates supabase.auth.signInWithOAuth with provider 'google'.
- * Button is disabled with a tooltip/message if required configuration is missing.
+ * GoogleButton - Triggers Supabase OAuth flow with Google.
+ * Automatically selects redirectTo based on current origin (localhost vs prod).
  */
 export default function GoogleButton() {
   const redirectTo = useMemo(() => {
-    const envRedirect = process.env.REACT_APP_OAUTH_REDIRECT_URI;
-    const base = envRedirect && envRedirect.trim().length > 0 ? envRedirect : `${getSiteURL()}/auth/callback`;
-    return base;
+    const origin = window.location.origin;
+    const chosen =
+      origin.includes('localhost')
+        ? process.env.REACT_APP_OAUTH_REDIRECT_URI_LOCAL
+        : process.env.REACT_APP_OAUTH_REDIRECT_URI_PROD;
+    return chosen || '';
   }, []);
 
-  // Guard: Require Supabase env vars. Google-specific client id is not required by supabase-js on the frontend.
+  // Guard: require core envs to enable button
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
   const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
-  const googleConfiguredInDashboard = true; // cannot detect at runtime; assume true and rely on Supabase error if not
-  const isConfigOk = Boolean(supabaseUrl && supabaseKey && googleConfiguredInDashboard);
+  const isConfigOk =
+    Boolean(supabaseUrl && supabaseKey) &&
+    Boolean(process.env.REACT_APP_OAUTH_REDIRECT_URI_LOCAL) &&
+    Boolean(process.env.REACT_APP_OAUTH_REDIRECT_URI_PROD);
 
-  const disabledReason = !supabaseUrl || !supabaseKey
-    ? 'Supabase is not configured. Please set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_KEY.'
-    : !googleConfiguredInDashboard
-      ? 'Google provider not enabled in Supabase Dashboard.'
-      : '';
+  const disabledReason =
+    !supabaseUrl || !supabaseKey
+      ? 'Supabase is not configured. Please set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_KEY.'
+      : !process.env.REACT_APP_OAUTH_REDIRECT_URI_LOCAL || !process.env.REACT_APP_OAUTH_REDIRECT_URI_PROD
+        ? 'OAuth redirect URIs are not set.'
+        : '';
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -35,12 +38,12 @@ export default function GoogleButton() {
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectTo,
+          redirectTo,
         },
       });
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.error('Google OAuth start failed:', err);
+      console.error('Google sign-in error:', err);
       alert(err?.message || 'Unable to start Google sign-in');
     }
   };
@@ -48,26 +51,15 @@ export default function GoogleButton() {
   return (
     <button
       type="button"
-      aria-label="Continue with Google"
       onClick={handleClick}
       disabled={!isConfigOk}
+      className={`w-full inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${!isConfigOk ? 'opacity-50 cursor-not-allowed' : ''}`}
+      aria-disabled={!isConfigOk}
+      aria-label="Sign in with Google"
       title={!isConfigOk ? disabledReason : 'Continue with Google'}
-      style={{
-        width: '100%',
-        padding: '10px 12px',
-        background: '#fff',
-        color: '#111827',
-        border: '1px solid #d1d5db',
-        borderRadius: 6,
-        cursor: isConfigOk ? 'pointer' : 'not-allowed',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-      }}
     >
-      <span aria-hidden="true">🔵</span>
-      <span>Continue with Google</span>
+      <span className="sr-only">Sign in with Google</span>
+      Continue with Google
     </button>
   );
 }
