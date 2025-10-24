@@ -100,13 +100,18 @@ export default function GitHubButton({ onError }) {
       <button
         className="btn github"
         type="button"
+        role="button"
         onClick={handleClick}
         disabled={!!missing.length || pending}
         aria-label="Continue with GitHub"
         aria-describedby={helper ? 'github-info' : undefined}
+        title="Continue with GitHub"
+        style={{ pointerEvents: 'auto' }}
       >
         <span className="github-icon" aria-hidden="true" />
-        {pending ? 'Contacting GitHub…' : 'Continue with GitHub'}
+        <span style={{ pointerEvents: 'none' }}>
+          {pending ? 'Contacting GitHub…' : 'Continue with GitHub'}
+        </span>
       </button>
       {helper && (
         <div className="helper" id="github-info" style={{ marginTop: 8 }} role="status" aria-live="polite">
