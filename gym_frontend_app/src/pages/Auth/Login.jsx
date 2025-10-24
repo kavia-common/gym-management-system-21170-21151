@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useSupabaseAuth } from '../../context';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/Card';
+import GoogleButton from '../../components/auth/GoogleButton.jsx';
+import GitHubButton from '../../components/auth/GitHubButton.jsx';
 
 /**
  * PUBLIC_INTERFACE
- * Login page: authenticates user via email/password only.
- * Social OAuth providers are currently disabled and hidden.
- * To re-enable, restore social button components and add provider env vars.
+ * Login page supporting email/password and social OAuth (Google/GitHub) via Supabase.
+ * Buttons include runtime guards and remain disabled if env is missing.
  */
 export default function Login() {
   const { signIn } = useSupabaseAuth();
@@ -33,6 +34,8 @@ export default function Login() {
     }
   };
 
+  const supabaseConfigured = Boolean(process.env.REACT_APP_SUPABASE_URL && process.env.REACT_APP_SUPABASE_KEY);
+
   return (
     <div className="content" style={{ maxWidth: 520, margin: '40px auto' }}>
       <Card title="Welcome back">
@@ -52,9 +55,18 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="helper" style={{ textAlign: 'center', marginTop: 16 }}>
-          Social logins are currently disabled.
+        <div className="helper" style={{ textAlign: 'center', margin: '16px 0' }}>or</div>
+
+        <div style={{ display: 'grid', gap: 8 }}>
+          <GoogleButton />
+          <GitHubButton />
         </div>
+
+        {!supabaseConfigured && (
+          <div className="error-text" style={{ marginTop: 12 }}>
+            Supabase is not configured. Set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_KEY to enable social sign-in.
+          </div>
+        )}
 
         <p className="helper" style={{ marginTop: 16 }}>
           No account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Create one</Link>
