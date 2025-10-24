@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { useSupabaseAuth } from '../context/AuthContext';
+import { useSupabaseAuth } from '../context';
 import UserMenu from './UserMenu.tsx';
 // Design Things UI
 import { Button } from '../design-system/ui';

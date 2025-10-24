@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useSupabaseAuth } from '../context/AuthContext';
+import { useSupabaseAuth } from '../context';
 
 type ProtectedRouteProps = {
   /**

@@ -22,11 +22,12 @@ import Notifications from './pages/Notifications.jsx';
 // Supabase auth
 import { AuthProvider } from './context';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AuthBoundary from './components/AuthBoundary.jsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Account from './pages/Account.tsx';
 import NotAuthorized from './pages/NotAuthorized.jsx';
-import { useSupabaseAuth } from './context/AuthContext';
+import { useSupabaseAuth } from './context';
 
 // Member pages
 import MemberDashboard from './pages/Member/MemberDashboard.jsx';
@@ -75,11 +76,14 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <div className="app-shell">
-          <Navbar />
-          <DemoBanner />
-          <Sidebar />
+          <AuthBoundary>
+            <Navbar />
+            <DemoBanner />
+            <Sidebar />
+          </AuthBoundary>
           <main className="content">
-            <Routes>
+            <AuthBoundary>
+              <Routes>
               {/* Root route: if authenticated, send to role-specific dashboard. Otherwise to /signin */}
               <Route
                 path="/"
@@ -138,6 +142,7 @@ function App() {
 
               <Route path="*" element={<div className="card"><h3>Not found</h3></div>} />
             </Routes>
+            </AuthBoundary>
           </main>
         </div>
       </BrowserRouter>
