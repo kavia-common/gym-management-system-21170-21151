@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
-import { getSupabaseClient } from '../lib/supabaseClient';
+import { getSupabaseClient, signInWithEmailPassword, signOut as supaSignOut } from '../lib/supabaseClient';
 import { fetchWithAuth } from '../api/client';
 import api from '../services/apiClient';
 import { getRedirectUriForAuthCallback } from '../config/oauth';
@@ -151,12 +151,9 @@ export function AuthProvider({ children }) {
       isAuthenticated: !!session?.access_token,
       // PUBLIC_INTERFACE
       async signIn(email, password) {
-        const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+        const { error, data } = await signInWithEmailPassword(email, password);
         if (error) throw error;
-        // onAuthStateChange will populate session/user; ensure role/profile refresh
-        try {
-          await loadMe();
-        } catch {}
+        try { await loadMe(); } catch {}
         return data;
       },
       // PUBLIC_INTERFACE
@@ -178,9 +175,8 @@ export function AuthProvider({ children }) {
       },
       // PUBLIC_INTERFACE
       async signOut() {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await supaSignOut();
         if (error) throw error;
-        // Clear local role/profile
         setProfile(null);
         setRole(null);
       },

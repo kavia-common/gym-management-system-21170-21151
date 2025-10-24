@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import supabase from '../../lib/supabaseClient';
+import { signInWithProvider } from '../../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE
@@ -35,12 +35,7 @@ export default function GoogleButton() {
     e.preventDefault();
     if (!isConfigOk) return;
     try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo,
-        },
-      });
+      await signInWithProvider('google', redirectTo);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Google sign-in error:', err);
