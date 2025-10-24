@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import supabase from '../../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE
