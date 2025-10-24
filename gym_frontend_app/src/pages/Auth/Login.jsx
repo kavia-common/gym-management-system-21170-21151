@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useSupabaseAuth } from '../../context';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/Card';
 import GoogleButton from '../../components/auth/GoogleButton.jsx';
 import GitHubButton from '../../components/auth/GitHubButton.jsx';
+import { signInWithEmailPassword } from '../../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE
@@ -11,7 +11,6 @@ import GitHubButton from '../../components/auth/GitHubButton.jsx';
  * Buttons include runtime guards and remain disabled if env is missing.
  */
 export default function Login() {
-  const { signIn } = useSupabaseAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -25,10 +24,11 @@ export default function Login() {
     setSubmitting(true);
     setError('');
     try {
-      await signIn(email, password);
+      const { error: authError } = await signInWithEmailPassword(email, password);
+      if (authError) throw authError;
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err?.response?.data?.detail || 'Login failed');
+      setError(err?.message || err?.response?.data?.detail || 'Login failed');
     } finally {
       setSubmitting(false);
     }

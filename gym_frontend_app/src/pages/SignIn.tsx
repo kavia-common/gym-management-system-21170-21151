@@ -5,20 +5,22 @@ import EmailPasswordForm from '../components/auth/EmailPasswordForm.jsx';
 import GoogleButton from '../components/auth/GoogleButton.jsx';
 import GitHubButton from '../components/auth/GitHubButton.jsx';
 import Logo from '../components/branding/Logo.tsx';
+import { signInWithEmailPassword } from '../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE
  * SignIn: Email/password login via Supabase, with Google and GitHub OAuth options.
  */
 export default function SignIn() {
-  const { signIn, role } = useSupabaseAuth();
+  const { role } = useSupabaseAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [oauthInfo, setOauthInfo] = useState('');
   const from = (location && (location as any).state && (location as any).state.from && (location as any).state.from.pathname) || null;
 
   const handleEmailPassword = async (email: string, password: string) => {
-    await signIn(email, password);
+    const { error } = await signInWithEmailPassword(email, password);
+    if (error) throw error;
     const fallback = role === 'trainer' ? '/dashboard/trainer' : '/dashboard/member';
     navigate(from || fallback || '/', { replace: true });
   };

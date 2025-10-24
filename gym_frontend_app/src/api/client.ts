@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '../lib/supabaseClient';
+import { getSupabaseClient, signOut } from '../lib/supabaseClient';
 
 /**
  * PUBLIC_INTERFACE
@@ -94,7 +94,7 @@ export async function fetchWithAuth(input: RequestInfo | URL, init: RequestInit 
     if (response.status === 401) {
       // If still unauthorized, sign out and redirect to signin
       try {
-        await supabase.auth.signOut();
+        await signOut();
       } catch {
         // ignore sign out failures
       }
